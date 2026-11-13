@@ -1,0 +1,108 @@
+// moonvibe-Mod für mehrere Minecraft-Versionen aus EINEM Quelltext.
+//
+//   gradlew build              → baut für die Standard-Version (gradle.properties: minecraft_version)
+//   gradlew build -Pmc=1.21.11 → baut für eine andere Version (Werte in versions/<version>.properties)
+//   build-mod.bat              → baut alle Versionen nacheinander
+//
+// Versionsabhängiger Code steht in Kommentar-Blöcken, die vor dem Kompilieren aufgelöst werden:
+//   //#if MC >= 26.1
+//   neuer Code
+//   //#else
+//   //$$ alter Code (auskommentiert, damit die Datei für die Hauptversion normal aussieht)
+//   //#endif
+//
+// Reine Umbenennungen (z. B. GuiGraphicsExtractor → GuiGraphics) stehen in versions/<version>.renames.
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}" apply false
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}" apply false
+}
+
+def mcVersion = (findProperty('mc') ?: project.minecraft_version).toString()
+def versionFile = file("versions/${mcVersion}.properties")
+if (!versionFile.exists()) throw new GradleException("Unbekannte Minecraft-Version ${mcVersion} (fehlt: versions/${mcVersion}.properties)")
+def mc = new Properties()
+versionFile.withInputStream { mc.load(it) }
+// Ältere Versionen sind verschleiert und brauchen Mojangs Namen (Mappings), ab 26.1 nicht mehr
+def obfuscated = mc.getProperty('mappings', 'none') == 'mojang'
+def javaVersion = mc.getProperty('java_version') as int
+
+apply plugin: obfuscated ? 'net.fabricmc.fabric-loom-remap' : 'net.fabricmc.fabric-loom'
+
+version = "${project.mod_version}+${mcVersion}"
+group = project.maven_group
+// jede Version bekommt einen eigenen Build-Ordner
+layout.buildDirectory = file("build/${mcVersion}")
+
+base {
+	archivesName = project.archives_base_name
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${mcVersion}"
+	// @Nullable-Markierungen (neuere Minecraft-Versionen bringen sie selbst mit, ältere nicht)
+	compileOnly "org.jspecify:jspecify:1.0.0"
+	if (obfuscated) {
+		mappings loom.officialMojangMappings()
+		modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+		modImplementation "net.fabricmc.fabric-api:fabric-api:${mc.getProperty('fabric_api_version')}"
+	} else {
+		implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+		implementation "net.fabricmc.fabric-api:fabric-api:${mc.getProperty('fabric_api_version')}"
+	}
+}
+
+// ---------- Präprozessor (gemeinsam mit mod-legacy) ----------
+ext.mcVersion = mcVersion
+apply from: '../gradle/preprocessor.gradle'
+def preprocessJava = tasks.named('preprocessJava')
+
+processResources {
+	// Fabric API hieß bis 1.17 "fabric"
+	def fabricApiId = mcAtLeast('1.18') ? 'fabric-api' : 'fabric'
+	def props = [version: project.mod_version, minecraft_version: mcVersion, java_version: javaVersion, fabric_api_id: fabricApiId]
+	inputs.properties props
+	// Mixins: alle Klassen im mixin-Paket, die für diese Version Code enthalten (manche gibt es nur für ältere Versionen)
+	def mixinDir = preprocessJava.flatMap { it.target.dir('net/moonvibe/mixin') }
+	inputs.dir(mixinDir)
+
+	filesMatching(['fabric.mod.json', 'moonvibe.mixins.json']) {
+		def mixins = mixinDir.get().asFile.listFiles()
+			.findAll { it.name.endsWith('.java') && it.getText('UTF-8').contains('@Mixin(') }
+			.collect { '"' + (it.name - '.java') + '"' }
+			.sort()
+		expand props + [client_mixins: mixins.join(',\n\t\t')]
+	}
+
+	// Den Schrift-Typ "reference" (Rückgriff auf die Minecraft-Schrift) gibt es erst ab 1.20
+	def stripFontReferences = !mcAtLeast('1.20')
+	def fontDir = new File(destinationDir, 'assets/moonvibe/font')
+	doLast {
+		if (!stripFontReferences) return
+		fontDir.listFiles().findAll { it.name.endsWith('.json') }.each { f ->
+			def json = new groovy.json.JsonSlurper().parse(f)
+			json.providers.removeAll { it.type == 'reference' }
+			f.setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(json)), 'UTF-8')
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = javaVersion
+	it.options.encoding = 'UTF-8'
+}
+
+java {
+	sourceCompatibility = JavaVersion.toVersion(javaVersion)
+	targetCompatibility = JavaVersion.toVersion(javaVersion)
+}
+
+// Kopiert die fertige Mod-Jar in den Launcher (ein Ordner je Minecraft-Version).
+// (Sync statt Copy: alte Jar-Versionen im Zielordner werden dabei entfernt.)
+tasks.register('copyToLauncher', Sync) {
+	from tasks.named(obfuscated ? 'remapJar' : 'jar')
+	into file("../launcher/client-mods/${mcVersion}")
+}
+
+tasks.named('build') {
+	finalizedBy 'copyToLauncher'
+}

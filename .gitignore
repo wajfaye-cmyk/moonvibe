@@ -1,0 +1,39 @@
+# Werkzeuge (lokales JDK)
+.tools/
+
+# Launcher
+launcher/node_modules/
+launcher/dist/
+launcher/release/
+
+# Editor
+.vscode/
+mod/bin/
+mod-legacy/bin/
+
+# Mod (Gradle)
+mod/.gradle/
+mod/build/
+mod/run/
+mod/out/
+mod/.idea/
+mod/*.iml
+
+# Backend (Testdaten, Cloudflare-Werkzeug, erzeugte Dateien)
+backend/data/
+backend/node_modules/
+backend/.wrangler/
+backend/.build/
+backend/public/
+
+# Sonstiges
+*.log
+.DS_Store
+Thumbs.db
+
+# Gebaute Mod (entsteht durch build-mod.bat)
+launcher/client-mods/
+
+# Mod für die alten Versionen 1.8.9 – 1.13.2 (Gradle)
+mod-legacy/.gradle/
+mod-legacy/build/

@@ -1,0 +1,112 @@
+[
+	{
+		"id": "welcome",
+		"date": "2026-11-13",
+		"tag": "launcher",
+		"image": "moon",
+		"title": {
+			"en": "Welcome to Moonvibe",
+			"de": "Willkommen bei Moonvibe",
+			"fr": "Bienvenue sur Moonvibe",
+			"es": "Bienvenido a Moonvibe",
+			"tr": "Moonvibe'a hoş geldin",
+			"ru": "Добро пожаловать в Moonvibe"
+		},
+		"text": {
+			"en": "A clean PvP client from 1.8.9 to the newest release: HUD mods, zoom, FPS boost and cosmetics in one launcher.",
+			"de": "Ein schlanker PvP-Client von 1.8.9 bis zur neuesten Version: HUD-Mods, Zoom, FPS-Boost und Cosmetics in einem Launcher.",
+			"fr": "Un client PvP épuré de la 1.8.9 à la dernière version : mods HUD, zoom, boost de FPS et cosmétiques dans un seul launcher.",
+			"es": "Un cliente PvP limpio desde 1.8.9 hasta la última versión: mods de HUD, zoom, más FPS y cosméticos en un solo launcher.",
+			"tr": "1.8.9'dan en yeni sürüme sade bir PvP istemcisi: HUD modları, yakınlaştırma, FPS artışı ve kozmetikler tek başlatıcıda.",
+			"ru": "Аккуратный PvP-клиент от 1.8.9 до новейшей версии: HUD-моды, зум, прирост FPS и косметика в одном лаунчере."
+		}
+	},
+	{
+		"id": "headphones-sneakers",
+		"date": "2026-11-13",
+		"tag": "update",
+		"image": "cosmetics",
+		"title": {
+			"en": "Headphones and sneakers",
+			"de": "Kopfhörer und Sneaker",
+			"fr": "Casques et baskets",
+			"es": "Auriculares y zapatillas",
+			"tr": "Kulaklıklar ve spor ayakkabılar",
+			"ru": "Наушники и кроссовки"
+		},
+		"text": {
+			"en": "6 headphones and 7 sneakers, including Moonwalkers and glowing Neon Runners. Shoes now have their own slot.",
+			"de": "6 Kopfhörer und 7 Sneaker, darunter Moonwalker und leuchtende Neon-Runner. Schuhe haben jetzt einen eigenen Platz.",
+			"fr": "6 casques et 7 paires de baskets, dont les Moonwalkers et les Runners néon lumineux. Les chaussures ont leur propre emplacement.",
+			"es": "6 auriculares y 7 zapatillas, con Moonwalkers y Corredoras neón brillantes. Las zapatillas tienen su propio espacio.",
+			"tr": "Ay Yürüyüşçüleri ve parlayan Neon Koşu Ayakkabısı dahil 6 kulaklık ve 7 ayakkabı. Ayakkabıların artık kendi yuvası var.",
+			"ru": "6 наушников и 7 пар кроссовок, включая лунные и светящиеся неоновые. У обуви теперь свой слот."
+		}
+	},
+	{
+		"id": "custom-capes",
+		"date": "2026-11-12",
+		"tag": "update",
+		"image": "capes",
+		"title": {
+			"en": "Your own cape",
+			"de": "Dein eigenes Cape",
+			"fr": "Ta propre cape",
+			"es": "Tu propia capa",
+			"tr": "Kendi pelerinin",
+			"ru": "Свой плащ"
+		},
+		"text": {
+			"en": "Upload any image as your cape in the launcher or right in game, plus 43 capes including Moonvibe and Moonlight.",
+			"de": "Lade ein beliebiges Bild als Cape hoch, im Launcher oder im Spiel, dazu 43 Capes wie Moonvibe und Mondschein.",
+			"fr": "Importe n’importe quelle image comme cape, dans le launcher ou en jeu, plus 43 capes dont Moonvibe et Clair de lune.",
+			"es": "Sube cualquier imagen como capa en el launcher o en el juego, además de 43 capas como Moonvibe y Luz de luna.",
+			"tr": "Herhangi bir resmi başlatıcıda ya da oyunda pelerin olarak yükle; ayrıca Moonvibe ve Ay Işığı dahil 43 pelerin.",
+			"ru": "Загрузи любую картинку как плащ в лаунчере или прямо в игре. Плюс 43 плаща, включая Moonvibe и Лунный свет."
+		}
+	},
+	{
+		"id": "hud-editor",
+		"date": "2026-11-11",
+		"tag": "feature",
+		"image": "hud",
+		"title": {
+			"en": "HUD editor",
+			"de": "HUD-Editor",
+			"fr": "Éditeur de HUD",
+			"es": "Editor de HUD",
+			"tr": "HUD düzenleyici",
+			"ru": "Редактор HUD"
+		},
+		"text": {
+			"en": "Press Right Shift in game: 20 mods like FPS, CPS, keystrokes and armor status, with snapping and per-mod settings.",
+			"de": "Drücke im Spiel Rechte Umschalttaste: 20 Mods wie FPS, CPS, Tastenanzeige und Rüstungsstatus, mit Einrasten und Einstellungen.",
+			"fr": "Appuie sur Maj droite en jeu : 20 mods comme FPS, CPS, touches et état de l’armure, avec aimantation et réglages.",
+			"es": "Pulsa Mayús derecha en el juego: 20 mods como FPS, CPS, teclas y estado de armadura, con ajuste y opciones.",
+			"tr": "Oyunda Sağ Shift'e bas: FPS, CPS, tuş göstergesi ve zırh durumu gibi 20 mod, hizalama ve ayarlarla.",
+			"ru": "Нажми правый Shift в игре: 20 модов — FPS, CPS, клавиши, состояние брони — с привязкой и настройками."
+		}
+	},
+	{
+		"id": "versions",
+		"date": "2026-11-10",
+		"tag": "update",
+		"image": "versions",
+		"title": {
+			"en": "17 versions: 1.8.9 to 26.3",
+			"de": "17 Versionen: 1.8.9 bis 26.3",
+			"fr": "17 versions : 1.8.9 à 26.3",
+			"es": "17 versiones: 1.8.9 a 26.3",
+			"tr": "17 sürüm: 1.8.9'dan 26.3'e",
+			"ru": "17 версий: от 1.8.9 до 26.3"
+		},
+		"text": {
+			"en": "HUD, menus, zoom and cosmetics work on every listed version, from classic 1.8.9 PvP to the newest release.",
+			"de": "HUD, Menüs, Zoom und Cosmetics laufen auf jeder Version in der Liste, vom klassischen 1.8.9-PvP bis zur neuesten.",
+			"fr": "HUD, menus, zoom et cosmétiques fonctionnent sur chaque version, du PvP 1.8.9 classique à la plus récente.",
+			"es": "HUD, menús, zoom y cosméticos funcionan en todas las versiones, del PvP clásico 1.8.9 a la más nueva.",
+			"tr": "HUD, menüler, yakınlaştırma ve kozmetikler klasik 1.8.9 PvP'den en yeni sürüme kadar her sürümde çalışır.",
+			"ru": "HUD, меню, зум и косметика работают на всех версиях — от классического PvP 1.8.9 до новейшей."
+		}
+	}
+]

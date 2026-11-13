@@ -1,0 +1,1406 @@
+[
+  {
+    "id": "moonvibe",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Moonvibe",
+      "de": "Moonvibe",
+      "fr": "Moonvibe",
+      "es": "Moonvibe",
+      "tr": "Moonvibe",
+      "ru": "Moonvibe"
+    }
+  },
+  {
+    "id": "moonvibe_gold",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Moonvibe Gold",
+      "de": "Moonvibe Gold",
+      "fr": "Moonvibe Or",
+      "es": "Moonvibe Oro",
+      "tr": "Moonvibe Altın",
+      "ru": "Moonvibe Золото"
+    }
+  },
+  {
+    "id": "midnight",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Midnight",
+      "de": "Mitternacht",
+      "fr": "Minuit",
+      "es": "Medianoche",
+      "tr": "Gece Yarısı",
+      "ru": "Полночь"
+    }
+  },
+  {
+    "id": "flame",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Flame",
+      "de": "Flamme",
+      "fr": "Flamme",
+      "es": "Llama",
+      "tr": "Alev",
+      "ru": "Пламя"
+    }
+  },
+  {
+    "id": "ocean",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Ocean",
+      "de": "Ozean",
+      "fr": "Océan",
+      "es": "Océano",
+      "tr": "Okyanus",
+      "ru": "Океан"
+    }
+  },
+  {
+    "id": "emerald",
+    "type": "cape",
+    "rarity": "common",
+    "names": {
+      "en": "Emerald",
+      "de": "Smaragd",
+      "fr": "Émeraude",
+      "es": "Esmeralda",
+      "tr": "Zümrüt",
+      "ru": "Изумруд"
+    }
+  },
+  {
+    "id": "royal_gold",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Royal Gold",
+      "de": "Königsgold",
+      "fr": "Or royal",
+      "es": "Oro real",
+      "tr": "Kraliyet Altını",
+      "ru": "Королевское золото"
+    }
+  },
+  {
+    "id": "sakura",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Sakura",
+      "de": "Sakura",
+      "fr": "Sakura",
+      "es": "Sakura",
+      "tr": "Sakura",
+      "ru": "Сакура"
+    }
+  },
+  {
+    "id": "galaxy",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Galaxy",
+      "de": "Galaxie",
+      "fr": "Galaxie",
+      "es": "Galaxia",
+      "tr": "Galaksi",
+      "ru": "Галактика"
+    }
+  },
+  {
+    "id": "sunset",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Sunset",
+      "de": "Sonnenuntergang",
+      "fr": "Coucher de soleil",
+      "es": "Atardecer",
+      "tr": "Gün Batımı",
+      "ru": "Закат"
+    }
+  },
+  {
+    "id": "aurora",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Aurora",
+      "de": "Polarlicht",
+      "fr": "Aurore boréale",
+      "es": "Aurora",
+      "tr": "Kutup Işıkları",
+      "ru": "Северное сияние"
+    }
+  },
+  {
+    "id": "lava",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Lava",
+      "de": "Lava",
+      "fr": "Lave",
+      "es": "Lava",
+      "tr": "Lav",
+      "ru": "Лава"
+    }
+  },
+  {
+    "id": "frost",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Frost",
+      "de": "Frost",
+      "fr": "Givre",
+      "es": "Escarcha",
+      "tr": "Ayaz",
+      "ru": "Иней"
+    }
+  },
+  {
+    "id": "matrix",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Matrix",
+      "de": "Matrix",
+      "fr": "Matrice",
+      "es": "Matrix",
+      "tr": "Matris",
+      "ru": "Матрица"
+    }
+  },
+  {
+    "id": "rainbow",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Rainbow",
+      "de": "Regenbogen",
+      "fr": "Arc-en-ciel",
+      "es": "Arcoíris",
+      "tr": "Gökkuşağı",
+      "ru": "Радуга"
+    }
+  },
+  {
+    "id": "checkered",
+    "type": "cape",
+    "rarity": "common",
+    "names": {
+      "en": "Racing",
+      "de": "Rennflagge",
+      "fr": "Damier",
+      "es": "Bandera de carreras",
+      "tr": "Yarış Bayrağı",
+      "ru": "Гоночный флаг"
+    }
+  },
+  {
+    "id": "camo",
+    "type": "cape",
+    "rarity": "common",
+    "names": {
+      "en": "Camo",
+      "de": "Tarnung",
+      "fr": "Camouflage",
+      "es": "Camuflaje",
+      "tr": "Kamuflaj",
+      "ru": "Камуфляж"
+    }
+  },
+  {
+    "id": "toxic",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Toxic",
+      "de": "Giftig",
+      "fr": "Toxique",
+      "es": "Tóxico",
+      "tr": "Zehirli",
+      "ru": "Токсичный"
+    }
+  },
+  {
+    "id": "vaporwave",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Vaporwave",
+      "de": "Vaporwave",
+      "fr": "Vaporwave",
+      "es": "Vaporwave",
+      "tr": "Vaporwave",
+      "ru": "Вейпорвейв"
+    }
+  },
+  {
+    "id": "honey",
+    "type": "cape",
+    "rarity": "common",
+    "names": {
+      "en": "Honey",
+      "de": "Honig",
+      "fr": "Miel",
+      "es": "Miel",
+      "tr": "Bal",
+      "ru": "Мёд"
+    }
+  },
+  {
+    "id": "void",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Void",
+      "de": "Leere",
+      "fr": "Néant",
+      "es": "Vacío",
+      "tr": "Boşluk",
+      "ru": "Пустота"
+    }
+  },
+  {
+    "id": "cherry",
+    "type": "cape",
+    "rarity": "common",
+    "names": {
+      "en": "Cherry",
+      "de": "Kirsche",
+      "fr": "Cerise",
+      "es": "Cereza",
+      "tr": "Kiraz",
+      "ru": "Вишня"
+    }
+  },
+  {
+    "id": "diamond",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Diamond",
+      "de": "Diamant",
+      "fr": "Diamant",
+      "es": "Diamante",
+      "tr": "Elmas",
+      "ru": "Алмаз"
+    }
+  },
+  {
+    "id": "storm",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Storm",
+      "de": "Gewitter",
+      "fr": "Tempête",
+      "es": "Tormenta",
+      "tr": "Fırtına",
+      "ru": "Гроза"
+    }
+  },
+  {
+    "id": "nebula",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Nebula",
+      "de": "Nebula",
+      "fr": "Nébuleuse",
+      "es": "Nebulosa",
+      "tr": "Bulutsu",
+      "ru": "Туманность"
+    }
+  },
+  {
+    "id": "ender",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Ender",
+      "de": "Ender",
+      "fr": "Ender",
+      "es": "Ender",
+      "tr": "Ender",
+      "ru": "Эндер"
+    }
+  },
+  {
+    "id": "dragon",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Dragon",
+      "de": "Drache",
+      "fr": "Dragon",
+      "es": "Dragón",
+      "tr": "Ejderha",
+      "ru": "Дракон"
+    }
+  },
+  {
+    "id": "retrowave",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Retrowave",
+      "de": "Retrowave",
+      "fr": "Retrowave",
+      "es": "Retrowave",
+      "tr": "Retrowave",
+      "ru": "Ретровейв"
+    }
+  },
+  {
+    "id": "inferno",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Inferno",
+      "de": "Inferno",
+      "fr": "Inferno",
+      "es": "Infierno",
+      "tr": "Cehennem",
+      "ru": "Инферно"
+    }
+  },
+  {
+    "id": "deep_sea",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Deep Sea",
+      "de": "Tiefsee",
+      "fr": "Abysses",
+      "es": "Mar profundo",
+      "tr": "Derin Deniz",
+      "ru": "Глубины"
+    }
+  },
+  {
+    "id": "carbon",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Carbon",
+      "de": "Carbon",
+      "fr": "Carbone",
+      "es": "Carbono",
+      "tr": "Karbon",
+      "ru": "Карбон"
+    }
+  },
+  {
+    "id": "hexcore",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Hexcore",
+      "de": "Hexcore",
+      "fr": "Hexcore",
+      "es": "Hexcore",
+      "tr": "Hexcore",
+      "ru": "Гексокор"
+    }
+  },
+  {
+    "id": "circuit",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Circuit",
+      "de": "Platine",
+      "fr": "Circuit",
+      "es": "Circuito",
+      "tr": "Devre",
+      "ru": "Схема"
+    }
+  },
+  {
+    "id": "lovestruck",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Lovestruck",
+      "de": "Verliebt",
+      "fr": "Coup de foudre",
+      "es": "Enamorado",
+      "tr": "Aşık",
+      "ru": "Влюблённость"
+    }
+  },
+  {
+    "id": "moon_neon",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Moonvibe Neon",
+      "de": "Moonvibe Neon",
+      "fr": "Moonvibe Néon",
+      "es": "Moonvibe Neón",
+      "tr": "Moonvibe Neon",
+      "ru": "Moonvibe Неон"
+    }
+  },
+  {
+    "id": "moonlight",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Moonlight",
+      "de": "Mondschein",
+      "fr": "Clair de lune",
+      "es": "Luz de luna",
+      "tr": "Ay Işığı",
+      "ru": "Лунный свет"
+    }
+  },
+  {
+    "id": "halloween",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Halloween",
+      "de": "Halloween",
+      "fr": "Halloween",
+      "es": "Halloween",
+      "tr": "Cadılar Bayramı",
+      "ru": "Хэллоуин"
+    }
+  },
+  {
+    "id": "amethyst",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Amethyst",
+      "de": "Amethyst",
+      "fr": "Améthyste",
+      "es": "Amatista",
+      "tr": "Ametist",
+      "ru": "Аметист"
+    }
+  },
+  {
+    "id": "hologram",
+    "type": "cape",
+    "rarity": "legendary",
+    "names": {
+      "en": "Hologram",
+      "de": "Hologramm",
+      "fr": "Hologramme",
+      "es": "Holograma",
+      "tr": "Hologram",
+      "ru": "Голограмма"
+    }
+  },
+  {
+    "id": "sculk",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Sculk",
+      "de": "Sculk",
+      "fr": "Sculk",
+      "es": "Sculk",
+      "tr": "Sculk",
+      "ru": "Скалк"
+    }
+  },
+  {
+    "id": "balance",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Balance",
+      "de": "Gleichgewicht",
+      "fr": "Équilibre",
+      "es": "Equilibrio",
+      "tr": "Denge",
+      "ru": "Равновесие"
+    }
+  },
+  {
+    "id": "tiger",
+    "type": "cape",
+    "rarity": "rare",
+    "names": {
+      "en": "Tiger",
+      "de": "Tiger",
+      "fr": "Tigre",
+      "es": "Tigre",
+      "tr": "Kaplan",
+      "ru": "Тигр"
+    }
+  },
+  {
+    "id": "glitch",
+    "type": "cape",
+    "rarity": "epic",
+    "names": {
+      "en": "Glitch",
+      "de": "Glitch",
+      "fr": "Glitch",
+      "es": "Glitch",
+      "tr": "Glitch",
+      "ru": "Глитч"
+    }
+  },
+  {
+    "id": "top_hat",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Top Hat",
+      "de": "Zylinder",
+      "fr": "Haut-de-forme",
+      "es": "Sombrero de copa",
+      "tr": "Silindir Şapka",
+      "ru": "Цилиндр"
+    }
+  },
+  {
+    "id": "top_hat_white",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "White Top Hat",
+      "de": "Weißer Zylinder",
+      "fr": "Haut-de-forme blanc",
+      "es": "Sombrero de copa blanco",
+      "tr": "Beyaz Silindir Şapka",
+      "ru": "Белый цилиндр"
+    }
+  },
+  {
+    "id": "crown",
+    "type": "hat",
+    "rarity": "legendary",
+    "names": {
+      "en": "Crown",
+      "de": "Krone",
+      "fr": "Couronne",
+      "es": "Corona",
+      "tr": "Taç",
+      "ru": "Корона"
+    }
+  },
+  {
+    "id": "crown_diamond",
+    "type": "hat",
+    "rarity": "legendary",
+    "names": {
+      "en": "Diamond Crown",
+      "de": "Diamantkrone",
+      "fr": "Couronne de diamant",
+      "es": "Corona de diamante",
+      "tr": "Elmas Taç",
+      "ru": "Алмазная корона"
+    }
+  },
+  {
+    "id": "halo",
+    "type": "hat",
+    "rarity": "epic",
+    "names": {
+      "en": "Halo",
+      "de": "Heiligenschein",
+      "fr": "Auréole",
+      "es": "Aureola",
+      "tr": "Hale",
+      "ru": "Нимб"
+    }
+  },
+  {
+    "id": "halo_frost",
+    "type": "hat",
+    "rarity": "epic",
+    "names": {
+      "en": "Frost Halo",
+      "de": "Frost-Heiligenschein",
+      "fr": "Auréole de givre",
+      "es": "Aureola helada",
+      "tr": "Buz Halesi",
+      "ru": "Ледяной нимб"
+    }
+  },
+  {
+    "id": "wizard_hat",
+    "type": "hat",
+    "rarity": "epic",
+    "names": {
+      "en": "Wizard Hat",
+      "de": "Zauberhut",
+      "fr": "Chapeau de sorcier",
+      "es": "Sombrero de mago",
+      "tr": "Büyücü Şapkası",
+      "ru": "Шляпа волшебника"
+    }
+  },
+  {
+    "id": "witch_hat",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Witch Hat",
+      "de": "Hexenhut",
+      "fr": "Chapeau de sorcière",
+      "es": "Sombrero de bruja",
+      "tr": "Cadı Şapkası",
+      "ru": "Шляпа ведьмы"
+    }
+  },
+  {
+    "id": "cat_ears",
+    "type": "hat",
+    "rarity": "common",
+    "names": {
+      "en": "Cat Ears",
+      "de": "Katzenohren",
+      "fr": "Oreilles de chat",
+      "es": "Orejas de gato",
+      "tr": "Kedi Kulakları",
+      "ru": "Кошачьи ушки"
+    }
+  },
+  {
+    "id": "fox_ears",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Fox Ears",
+      "de": "Fuchsohren",
+      "fr": "Oreilles de renard",
+      "es": "Orejas de zorro",
+      "tr": "Tilki Kulakları",
+      "ru": "Лисьи ушки"
+    }
+  },
+  {
+    "id": "bunny_ears",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Bunny Ears",
+      "de": "Hasenohren",
+      "fr": "Oreilles de lapin",
+      "es": "Orejas de conejo",
+      "tr": "Tavşan Kulakları",
+      "ru": "Заячьи ушки"
+    }
+  },
+  {
+    "id": "devil_horns",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Devil Horns",
+      "de": "Teufelshörner",
+      "fr": "Cornes de diable",
+      "es": "Cuernos de diablo",
+      "tr": "Şeytan Boynuzları",
+      "ru": "Рога дьявола"
+    }
+  },
+  {
+    "id": "viking_helmet",
+    "type": "hat",
+    "rarity": "epic",
+    "names": {
+      "en": "Viking Helmet",
+      "de": "Wikingerhelm",
+      "fr": "Casque viking",
+      "es": "Casco vikingo",
+      "tr": "Viking Miğferi",
+      "ru": "Шлем викинга"
+    }
+  },
+  {
+    "id": "beanie_red",
+    "type": "hat",
+    "rarity": "common",
+    "names": {
+      "en": "Red Beanie",
+      "de": "Rote Mütze",
+      "fr": "Bonnet rouge",
+      "es": "Gorro rojo",
+      "tr": "Kırmızı Bere",
+      "ru": "Красная шапка"
+    }
+  },
+  {
+    "id": "beanie_blue",
+    "type": "hat",
+    "rarity": "common",
+    "names": {
+      "en": "Blue Beanie",
+      "de": "Blaue Mütze",
+      "fr": "Bonnet bleu",
+      "es": "Gorro azul",
+      "tr": "Mavi Bere",
+      "ru": "Синяя шапка"
+    }
+  },
+  {
+    "id": "party_hat",
+    "type": "hat",
+    "rarity": "common",
+    "names": {
+      "en": "Party Hat",
+      "de": "Partyhut",
+      "fr": "Chapeau de fête",
+      "es": "Gorro de fiesta",
+      "tr": "Parti Şapkası",
+      "ru": "Праздничный колпак"
+    }
+  },
+  {
+    "id": "santa_hat",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Santa Hat",
+      "de": "Weihnachtsmütze",
+      "fr": "Bonnet de Noël",
+      "es": "Gorro de Papá Noel",
+      "tr": "Noel Baba Şapkası",
+      "ru": "Новогодний колпак"
+    }
+  },
+  {
+    "id": "headphones",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Studio Headphones",
+      "de": "Studio-Kopfhörer",
+      "fr": "Casque studio",
+      "es": "Auriculares de estudio",
+      "tr": "Stüdyo Kulaklığı",
+      "ru": "Студийные наушники"
+    }
+  },
+  {
+    "id": "headphones_white",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "White Headphones",
+      "de": "Weiße Kopfhörer",
+      "fr": "Casque blanc",
+      "es": "Auriculares blancos",
+      "tr": "Beyaz Kulaklık",
+      "ru": "Белые наушники"
+    }
+  },
+  {
+    "id": "headphones_moon",
+    "type": "hat",
+    "rarity": "epic",
+    "names": {
+      "en": "Moonvibe Headphones",
+      "de": "Moonvibe-Kopfhörer",
+      "fr": "Casque Moonvibe",
+      "es": "Auriculares Moonvibe",
+      "tr": "Moonvibe Kulaklığı",
+      "ru": "Наушники Moonvibe"
+    }
+  },
+  {
+    "id": "headphones_pink",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Pink Headphones",
+      "de": "Rosa Kopfhörer",
+      "fr": "Casque rose",
+      "es": "Auriculares rosas",
+      "tr": "Pembe Kulaklık",
+      "ru": "Розовые наушники"
+    }
+  },
+  {
+    "id": "headphones_gold",
+    "type": "hat",
+    "rarity": "legendary",
+    "names": {
+      "en": "Gold Headphones",
+      "de": "Goldene Kopfhörer",
+      "fr": "Casque doré",
+      "es": "Auriculares dorados",
+      "tr": "Altın Kulaklık",
+      "ru": "Золотые наушники"
+    }
+  },
+  {
+    "id": "headphones_neon",
+    "type": "hat",
+    "rarity": "legendary",
+    "names": {
+      "en": "Neon Headphones",
+      "de": "Neon-Kopfhörer",
+      "fr": "Casque néon",
+      "es": "Auriculares neón",
+      "tr": "Neon Kulaklık",
+      "ru": "Неоновые наушники"
+    }
+  },
+  {
+    "id": "propeller_cap",
+    "type": "hat",
+    "rarity": "epic",
+    "names": {
+      "en": "Propeller Cap",
+      "de": "Propellermütze",
+      "fr": "Casquette à hélice",
+      "es": "Gorra con hélice",
+      "tr": "Pervaneli Şapka",
+      "ru": "Кепка с пропеллером"
+    }
+  },
+  {
+    "id": "cowboy_hat",
+    "type": "hat",
+    "rarity": "rare",
+    "names": {
+      "en": "Cowboy Hat",
+      "de": "Cowboyhut",
+      "fr": "Chapeau de cowboy",
+      "es": "Sombrero vaquero",
+      "tr": "Kovboy Şapkası",
+      "ru": "Ковбойская шляпа"
+    }
+  },
+  {
+    "id": "sunglasses",
+    "type": "face",
+    "rarity": "common",
+    "names": {
+      "en": "Sunglasses",
+      "de": "Sonnenbrille",
+      "fr": "Lunettes de soleil",
+      "es": "Gafas de sol",
+      "tr": "Güneş Gözlüğü",
+      "ru": "Солнцезащитные очки"
+    }
+  },
+  {
+    "id": "pixel_shades",
+    "type": "face",
+    "rarity": "epic",
+    "names": {
+      "en": "Pixel Shades",
+      "de": "Pixel-Brille",
+      "fr": "Lunettes pixel",
+      "es": "Gafas pixeladas",
+      "tr": "Piksel Gözlük",
+      "ru": "Пиксельные очки"
+    }
+  },
+  {
+    "id": "heart_glasses",
+    "type": "face",
+    "rarity": "rare",
+    "names": {
+      "en": "Heart Glasses",
+      "de": "Herz-Brille",
+      "fr": "Lunettes cœur",
+      "es": "Gafas de corazón",
+      "tr": "Kalp Gözlük",
+      "ru": "Очки-сердечки"
+    }
+  },
+  {
+    "id": "nerd_glasses",
+    "type": "face",
+    "rarity": "common",
+    "names": {
+      "en": "Nerd Glasses",
+      "de": "Nerd-Brille",
+      "fr": "Lunettes de geek",
+      "es": "Gafas de nerd",
+      "tr": "İnek Gözlüğü",
+      "ru": "Очки ботаника"
+    }
+  },
+  {
+    "id": "glasses_3d",
+    "type": "face",
+    "rarity": "common",
+    "names": {
+      "en": "3D Glasses",
+      "de": "3D-Brille",
+      "fr": "Lunettes 3D",
+      "es": "Gafas 3D",
+      "tr": "3D Gözlük",
+      "ru": "3D-очки"
+    }
+  },
+  {
+    "id": "monocle",
+    "type": "face",
+    "rarity": "rare",
+    "names": {
+      "en": "Monocle",
+      "de": "Monokel",
+      "fr": "Monocle",
+      "es": "Monóculo",
+      "tr": "Monokl",
+      "ru": "Монокль"
+    }
+  },
+  {
+    "id": "mustache",
+    "type": "face",
+    "rarity": "common",
+    "names": {
+      "en": "Mustache",
+      "de": "Schnurrbart",
+      "fr": "Moustache",
+      "es": "Bigote",
+      "tr": "Bıyık",
+      "ru": "Усы"
+    }
+  },
+  {
+    "id": "ninja_mask",
+    "type": "face",
+    "rarity": "rare",
+    "names": {
+      "en": "Ninja Mask",
+      "de": "Ninja-Maske",
+      "fr": "Masque de ninja",
+      "es": "Máscara ninja",
+      "tr": "Ninja Maskesi",
+      "ru": "Маска ниндзя"
+    }
+  },
+  {
+    "id": "backpack_blue",
+    "type": "back",
+    "rarity": "common",
+    "names": {
+      "en": "Blue Backpack",
+      "de": "Blauer Rucksack",
+      "fr": "Sac à dos bleu",
+      "es": "Mochila azul",
+      "tr": "Mavi Sırt Çantası",
+      "ru": "Синий рюкзак"
+    }
+  },
+  {
+    "id": "backpack_red",
+    "type": "back",
+    "rarity": "common",
+    "names": {
+      "en": "Red Backpack",
+      "de": "Roter Rucksack",
+      "fr": "Sac à dos rouge",
+      "es": "Mochila roja",
+      "tr": "Kırmızı Sırt Çantası",
+      "ru": "Красный рюкзак"
+    }
+  },
+  {
+    "id": "moon_backpack",
+    "type": "back",
+    "rarity": "epic",
+    "names": {
+      "en": "Moonvibe Backpack",
+      "de": "Moonvibe-Rucksack",
+      "fr": "Sac à dos Moonvibe",
+      "es": "Mochila Moonvibe",
+      "tr": "Moonvibe Sırt Çantası",
+      "ru": "Рюкзак Moonvibe"
+    }
+  },
+  {
+    "id": "crystal_sword",
+    "type": "back",
+    "rarity": "epic",
+    "names": {
+      "en": "Crystal Sword",
+      "de": "Kristallschwert",
+      "fr": "Épée de cristal",
+      "es": "Espada de cristal",
+      "tr": "Kristal Kılıç",
+      "ru": "Кристальный меч"
+    }
+  },
+  {
+    "id": "katana",
+    "type": "back",
+    "rarity": "epic",
+    "names": {
+      "en": "Katana",
+      "de": "Katana",
+      "fr": "Katana",
+      "es": "Katana",
+      "tr": "Katana",
+      "ru": "Катана"
+    }
+  },
+  {
+    "id": "quiver",
+    "type": "back",
+    "rarity": "rare",
+    "names": {
+      "en": "Quiver",
+      "de": "Köcher",
+      "fr": "Carquois",
+      "es": "Carcaj",
+      "tr": "Okluk",
+      "ru": "Колчан"
+    }
+  },
+  {
+    "id": "jetpack",
+    "type": "back",
+    "rarity": "legendary",
+    "names": {
+      "en": "Jetpack",
+      "de": "Jetpack",
+      "fr": "Jetpack",
+      "es": "Jetpack",
+      "tr": "Jetpack",
+      "ru": "Реактивный ранец"
+    }
+  },
+  {
+    "id": "moon_shield",
+    "type": "back",
+    "rarity": "epic",
+    "names": {
+      "en": "Moonvibe Shield",
+      "de": "Moonvibe-Schild",
+      "fr": "Bouclier Moonvibe",
+      "es": "Escudo Moonvibe",
+      "tr": "Moonvibe Kalkanı",
+      "ru": "Щит Moonvibe"
+    }
+  },
+  {
+    "id": "angel_wings",
+    "type": "wings",
+    "rarity": "epic",
+    "names": {
+      "en": "Angel Wings",
+      "de": "Engelsflügel",
+      "fr": "Ailes d'ange",
+      "es": "Alas de ángel",
+      "tr": "Melek Kanatları",
+      "ru": "Крылья ангела"
+    }
+  },
+  {
+    "id": "moon_wings",
+    "type": "wings",
+    "rarity": "legendary",
+    "names": {
+      "en": "Moonvibe Wings",
+      "de": "Moonvibe-Flügel",
+      "fr": "Ailes Moonvibe",
+      "es": "Alas Moonvibe",
+      "tr": "Moonvibe Kanatları",
+      "ru": "Крылья Moonvibe"
+    }
+  },
+  {
+    "id": "dragon_wings",
+    "type": "wings",
+    "rarity": "legendary",
+    "names": {
+      "en": "Dragon Wings",
+      "de": "Drachenflügel",
+      "fr": "Ailes de dragon",
+      "es": "Alas de dragón",
+      "tr": "Ejderha Kanatları",
+      "ru": "Крылья дракона"
+    }
+  },
+  {
+    "id": "demon_wings",
+    "type": "wings",
+    "rarity": "epic",
+    "names": {
+      "en": "Demon Wings",
+      "de": "Dämonenflügel",
+      "fr": "Ailes de démon",
+      "es": "Alas de demonio",
+      "tr": "İblis Kanatları",
+      "ru": "Крылья демона"
+    }
+  },
+  {
+    "id": "bat_wings",
+    "type": "wings",
+    "rarity": "rare",
+    "names": {
+      "en": "Bat Wings",
+      "de": "Fledermausflügel",
+      "fr": "Ailes de chauve-souris",
+      "es": "Alas de murciélago",
+      "tr": "Yarasa Kanatları",
+      "ru": "Крылья летучей мыши"
+    }
+  },
+  {
+    "id": "butterfly_wings",
+    "type": "wings",
+    "rarity": "rare",
+    "names": {
+      "en": "Butterfly Wings",
+      "de": "Schmetterlingsflügel",
+      "fr": "Ailes de papillon",
+      "es": "Alas de mariposa",
+      "tr": "Kelebek Kanatları",
+      "ru": "Крылья бабочки"
+    }
+  },
+  {
+    "id": "fairy_wings",
+    "type": "wings",
+    "rarity": "epic",
+    "names": {
+      "en": "Fairy Wings",
+      "de": "Feenflügel",
+      "fr": "Ailes de fée",
+      "es": "Alas de hada",
+      "tr": "Peri Kanatları",
+      "ru": "Крылья феи"
+    }
+  },
+  {
+    "id": "phoenix_wings",
+    "type": "wings",
+    "rarity": "legendary",
+    "names": {
+      "en": "Phoenix Wings",
+      "de": "Phönixflügel",
+      "fr": "Ailes de phénix",
+      "es": "Alas de fénix",
+      "tr": "Anka Kanatları",
+      "ru": "Крылья феникса"
+    }
+  },
+  {
+    "id": "frost_wings",
+    "type": "wings",
+    "rarity": "legendary",
+    "names": {
+      "en": "Frost Wings",
+      "de": "Frostflügel",
+      "fr": "Ailes de givre",
+      "es": "Alas de escarcha",
+      "tr": "Buz Kanatları",
+      "ru": "Ледяные крылья"
+    }
+  },
+  {
+    "id": "mecha_wings",
+    "type": "wings",
+    "rarity": "epic",
+    "names": {
+      "en": "Mecha Wings",
+      "de": "Mecha-Flügel",
+      "fr": "Ailes mécaniques",
+      "es": "Alas mecánicas",
+      "tr": "Mekanik Kanatlar",
+      "ru": "Механические крылья"
+    }
+  },
+  {
+    "id": "sneakers_classic",
+    "type": "shoes",
+    "rarity": "common",
+    "names": {
+      "en": "Classic Sneakers",
+      "de": "Klassische Sneaker",
+      "fr": "Baskets classiques",
+      "es": "Zapatillas clásicas",
+      "tr": "Klasik Spor Ayakkabı",
+      "ru": "Классические кеды"
+    }
+  },
+  {
+    "id": "sneakers_black",
+    "type": "shoes",
+    "rarity": "common",
+    "names": {
+      "en": "Black Sneakers",
+      "de": "Schwarze Sneaker",
+      "fr": "Baskets noires",
+      "es": "Zapatillas negras",
+      "tr": "Siyah Spor Ayakkabı",
+      "ru": "Чёрные кроссовки"
+    }
+  },
+  {
+    "id": "sneakers_red",
+    "type": "shoes",
+    "rarity": "rare",
+    "names": {
+      "en": "Red Runners",
+      "de": "Rote Runner",
+      "fr": "Runners rouges",
+      "es": "Corredoras rojas",
+      "tr": "Kırmızı Koşu Ayakkabısı",
+      "ru": "Красные беговые"
+    }
+  },
+  {
+    "id": "sneakers_moon",
+    "type": "shoes",
+    "rarity": "epic",
+    "names": {
+      "en": "Moonwalkers",
+      "de": "Moonwalker",
+      "fr": "Moonwalkers",
+      "es": "Moonwalkers",
+      "tr": "Ay Yürüyüşçüleri",
+      "ru": "Лунные кроссовки"
+    }
+  },
+  {
+    "id": "sneakers_court",
+    "type": "shoes",
+    "rarity": "rare",
+    "names": {
+      "en": "Court High-Tops",
+      "de": "Court-High-Tops",
+      "fr": "Montantes court",
+      "es": "Botas de cancha",
+      "tr": "Basketbol Botu",
+      "ru": "Баскетбольные кеды"
+    }
+  },
+  {
+    "id": "sneakers_gold",
+    "type": "shoes",
+    "rarity": "legendary",
+    "names": {
+      "en": "Gold Sneakers",
+      "de": "Goldene Sneaker",
+      "fr": "Baskets dorées",
+      "es": "Zapatillas doradas",
+      "tr": "Altın Spor Ayakkabı",
+      "ru": "Золотые кроссовки"
+    }
+  },
+  {
+    "id": "sneakers_neon",
+    "type": "shoes",
+    "rarity": "legendary",
+    "names": {
+      "en": "Neon Runners",
+      "de": "Neon-Runner",
+      "fr": "Runners néon",
+      "es": "Corredoras neón",
+      "tr": "Neon Koşu Ayakkabısı",
+      "ru": "Неоновые кроссовки"
+    }
+  },
+  {
+    "id": "moon_buddy",
+    "type": "pet",
+    "rarity": "legendary",
+    "names": {
+      "en": "Moonvibe Buddy",
+      "de": "Moonvibe-Kumpel",
+      "fr": "Copain Moonvibe",
+      "es": "Compañero Moonvibe",
+      "tr": "Moonvibe Dostu",
+      "ru": "Приятель Moonvibe"
+    }
+  },
+  {
+    "id": "ghost",
+    "type": "pet",
+    "rarity": "rare",
+    "names": {
+      "en": "Ghost",
+      "de": "Geist",
+      "fr": "Fantôme",
+      "es": "Fantasma",
+      "tr": "Hayalet",
+      "ru": "Призрак"
+    }
+  },
+  {
+    "id": "slime",
+    "type": "pet",
+    "rarity": "common",
+    "names": {
+      "en": "Slime",
+      "de": "Schleim",
+      "fr": "Slime",
+      "es": "Slime",
+      "tr": "Balçık",
+      "ru": "Слизень"
+    }
+  },
+  {
+    "id": "fire_spirit",
+    "type": "pet",
+    "rarity": "epic",
+    "names": {
+      "en": "Fire Spirit",
+      "de": "Feuergeist",
+      "fr": "Esprit de feu",
+      "es": "Espíritu de fuego",
+      "tr": "Ateş Ruhu",
+      "ru": "Дух огня"
+    }
+  },
+  {
+    "id": "cloud",
+    "type": "pet",
+    "rarity": "common",
+    "names": {
+      "en": "Cloud",
+      "de": "Wolke",
+      "fr": "Nuage",
+      "es": "Nube",
+      "tr": "Bulut",
+      "ru": "Облако"
+    }
+  },
+  {
+    "id": "bee",
+    "type": "pet",
+    "rarity": "rare",
+    "names": {
+      "en": "Bee",
+      "de": "Biene",
+      "fr": "Abeille",
+      "es": "Abeja",
+      "tr": "Arı",
+      "ru": "Пчела"
+    }
+  },
+  {
+    "id": "ufo",
+    "type": "pet",
+    "rarity": "epic",
+    "names": {
+      "en": "Mini UFO",
+      "de": "Mini-UFO",
+      "fr": "Mini OVNI",
+      "es": "Mini OVNI",
+      "tr": "Mini UFO",
+      "ru": "Мини-НЛО"
+    }
+  }
+]

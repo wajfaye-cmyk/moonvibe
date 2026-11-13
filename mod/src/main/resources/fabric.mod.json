@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "moonvibe",
+	"version": "${version}",
+	"name": "Moonvibe",
+	"description": "Moonvibe PvP client: HUD mods, zoom, cosmetics and Discord Rich Presence.",
+	"authors": ["Nexora Team"],
+	"contact": {
+		"sources": "https://github.com/nexorateam/moonvibe"
+	},
+	"license": "MIT",
+	"icon": "assets/moonvibe/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["net.moonvibe.Moonvibe"]
+	},
+	"mixins": ["moonvibe.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=${java_version}",
+		"${fabric_api_id}": "*"
+	}
+}

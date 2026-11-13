@@ -1,0 +1,100 @@
+// moonvibe-Mod für alte Minecraft-Versionen (Legacy Fabric, 1.8.9 bis 1.13.2). Eigene Umsetzung, weil diese Versionen
+// technisch völlig anders funktionieren als die aktuellen (siehe ../mod) – Aussehen und Funktionen sind dieselben.
+//
+//   gradlew build              → baut für die Standard-Version (gradle.properties: minecraft_version)
+//   gradlew build -Pmc=1.12.2  → baut für eine andere Version (Werte in versions/<version>.properties)
+//
+// Versionsunterschiede im Quelltext: //#if-Blöcke und versions/<version>.renames (siehe ../gradle/preprocessor.gradle).
+plugins {
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'legacy-looming' version "${loom_version}"
+}
+
+def mcVersion = (findProperty('mc') ?: project.minecraft_version).toString()
+def versionFile = file("versions/${mcVersion}.properties")
+if (!versionFile.exists()) throw new GradleException("Unbekannte Minecraft-Version ${mcVersion} (fehlt: versions/${mcVersion}.properties)")
+def mc = new Properties()
+versionFile.withInputStream { mc.load(it) }
+
+version = "${project.mod_version}+${mcVersion}"
+group = project.maven_group
+// jede Version bekommt einen eigenen Build-Ordner
+layout.buildDirectory = file("build/${mcVersion}")
+
+base {
+	archivesName = project.archives_base_name
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${mcVersion}"
+	mappings(legacy.yarn(mcVersion, mc.getProperty('yarn_build')))
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	if (mc.getProperty('legacy_fabric_api_version')) {
+		modImplementation "net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${mc.getProperty('legacy_fabric_api_version')}"
+	}
+}
+
+// ---------- Präprozessor (gemeinsam mit mod) ----------
+ext.mcVersion = mcVersion
+apply from: '../gradle/preprocessor.gradle'
+def preprocessJava = tasks.named('preprocessJava')
+
+processResources {
+	def props = [version: project.mod_version, minecraft_version: mcVersion]
+	inputs.properties props
+	// Mixins: alle Klassen im mixin-Paket, die für diese Version Code enthalten
+	def mixinDir = preprocessJava.flatMap { it.target.dir('net/moonvibe/mixin') }
+	inputs.dir(mixinDir)
+
+	filesMatching(['fabric.mod.json', 'moonvibe.mixins.json']) {
+		def mixins = mixinDir.get().asFile.listFiles()
+			.findAll { it.name.endsWith('.java') && it.getText('UTF-8').contains('@Mixin(') }
+			.collect { '"' + (it.name - '.java') + '"' }
+			.sort()
+		expand props + [client_mixins: mixins.join(',\n\t\t')]
+	}
+
+	// Ab 1.11 heißen Sprachdateien klein (en_us.lang statt en_US.lang)
+	if (mcAtLeast('1.11')) {
+		filesMatching('assets/*/lang/*.lang') { it.name = it.name.toLowerCase(Locale.ROOT) }
+	}
+	// alte Dateien vorher löschen – Windows behält sonst die alte Groß-/Kleinschreibung
+	def langDir = new File(destinationDir, 'assets/moonvibe/lang')
+	doFirst { langDir.deleteDir() }
+
+	// Ab 1.13 liest Minecraft Übersetzungen als JSON (en_us.json statt en_us.lang)
+	def langToJson = mcAtLeast('1.13')
+	doLast {
+		if (!langToJson) return
+		langDir.listFiles().findAll { it.name.endsWith('.lang') }.each { f ->
+			def entries = new LinkedHashMap<String, String>()
+			f.getText('UTF-8').eachLine { line ->
+				int i = line.indexOf('=')
+				if (i > 0 && !line.startsWith('#')) entries[line.substring(0, i)] = line.substring(i + 1)
+			}
+			new File(langDir, f.name.replace('.lang', '.json')).setText(groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(entries)), 'UTF-8')
+			f.delete()
+		}
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 8
+	it.options.encoding = 'UTF-8'
+	it.options.compilerArgs << '-Xlint:-options'
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// Fertige Mod-Jar in den Launcher kopieren (ein Ordner je Minecraft-Version)
+tasks.register('copyToLauncher', Sync) {
+	from tasks.named('remapJar')
+	into file("../launcher/client-mods/${mcVersion}")
+}
+
+tasks.named('build') {
+	finalizedBy 'copyToLauncher'
+}

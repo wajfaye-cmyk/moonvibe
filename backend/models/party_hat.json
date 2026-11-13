@@ -1,0 +1,1 @@
+{"attach":"head","textureWidth":32,"textureHeight":32,"parts":[{"pivot":[1.5,-8.5,0],"rotation":[0,0,14],"cubes":[{"from":[-2.5,-2,-2.5],"size":[5,2,5],"uv":[0,0]}],"children":[{"pivot":[0,-2,0],"cubes":[{"from":[-1.5,-3,-1.5],"size":[3,3,3],"uv":[20,0]}],"children":[{"pivot":[0,-3,0],"cubes":[{"from":[-1,-2,-1],"size":[2,2,2],"uv":[0,7]}]}]}]}]}

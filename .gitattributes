@@ -1,0 +1,13 @@
+# Zeilenenden: Windows-Skripte mit CRLF, alles andere mit LF (gradlew muss unter Linux/macOS LF haben)
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binärdateien nie umwandeln
+*.png binary
+*.jpg binary
+*.ico binary
+*.jar binary
+*.ttf binary
+*.woff2 binary

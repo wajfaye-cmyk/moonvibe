@@ -1,0 +1,58 @@
+{
+  "name": "moonvibe-launcher",
+  "productName": "Moonvibe",
+  "version": "0.2.0",
+  "description": "Moonvibe - Minecraft launcher and PvP client",
+  "author": "Nexora Team",
+  "license": "MIT",
+  "private": true,
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.main.json && tsc -p tsconfig.renderer.json && node scripts/build-renderer.mjs",
+    "start": "npm run build && node scripts/start.mjs",
+    "dist": "tsc -p tsconfig.main.json && tsc -p tsconfig.renderer.json && node scripts/build-renderer.mjs --minify && electron-builder --win",
+    "thumbnails": "npm run build && node scripts/start.mjs scripts/thumbnails.cjs"
+  },
+  "dependencies": {
+    "adm-zip": "^0.6.1",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/node": "^24.0.0",
+    "@types/three": "^0.186.0",
+    "electron": "^45.0.0",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2",
+    "typescript": "^5.9.3"
+  },
+  "build": {
+    "appId": "net.moonvibe.launcher",
+    "productName": "Moonvibe",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "client-mods",
+        "to": "client-mods"
+      }
+    ],
+    "icon": "assets/icon.ico",
+    "win": {
+      "target": "nsis",
+      "artifactName": "Moonvibe-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Moonvibe",
+      "uninstallDisplayName": "Moonvibe"
+    },
+    "copyright": "Copyright © 2026 Nexora Team"
+  }
+}

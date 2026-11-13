@@ -1,0 +1,14 @@
+# Namen, die Minecraft ab 26.1 umbenannt hat – für 1.21.11 zurück auf die alten Namen.
+# Ein Wort = ganzer Name (Klasse/Methode), sonst wird der Text wörtlich ersetzt.
+GuiGraphicsExtractor -> GuiGraphics
+extractRenderState -> render
+extractBackground -> renderBackground
+extractPanorama -> renderPanorama
+extractProgressBar -> drawProgressBar
+g.text( -> g.drawString(
+g.item( -> g.renderItem(
+g.entity( -> g.submitEntityRenderState(
+# Fabric API
+keymapping.v1.KeyMappingHelper -> keybinding.v1.KeyBindingHelper
+KeyMappingHelper.registerKeyMapping( -> KeyBindingHelper.registerKeyBinding(
+LivingEntityRenderLayerRegistrationCallback -> LivingEntityFeatureRendererRegistrationCallback

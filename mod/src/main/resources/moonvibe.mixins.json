@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "net.moonvibe.mixin",
+	"compatibilityLevel": "JAVA_${java_version}",
+	"client": [
+		${client_mixins}
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

@@ -1,0 +1,37 @@
+# Namen für 1.17.1 (ältere Namen bzw. eigener Nachbau von GuiGraphics)
+# Ein Wort = ganzer Name (Klasse/Methode), sonst wird der Text wörtlich ersetzt.
+GuiGraphicsExtractor -> GuiGraphics
+extractRenderState -> render
+extractBackground -> renderBackground
+extractPanorama -> renderPanorama
+extractProgressBar -> drawProgressBar
+g.text( -> g.drawString(
+g.item( -> g.renderItem(
+g.entity( -> g.submitEntityRenderState(
+# Fabric API
+keymapping.v1.KeyMappingHelper -> keybinding.v1.KeyBindingHelper
+KeyMappingHelper.registerKeyMapping( -> KeyBindingHelper.registerKeyBinding(
+LivingEntityRenderLayerRegistrationCallback -> LivingEntityFeatureRendererRegistrationCallback
+Identifier -> ResourceLocation
+# Pakete, die später verschoben wurden
+net.minecraft.client.gui.screens.options.OptionsScreen -> net.minecraft.client.gui.screens.OptionsScreen
+net.minecraft.client.gui.screens.options.LanguageSelectScreen -> net.minecraft.client.gui.screens.LanguageSelectScreen
+net.minecraft.world.entity.player.PlayerSkin -> net.minecraft.client.resources.PlayerSkin
+net.minecraft.client.renderer.rendertype.RenderTypes -> net.minecraft.client.renderer.RenderType
+RenderTypes -> RenderType
+net.minecraft.client.model.player.PlayerModel -> net.minecraft.client.model.PlayerModel
+MobEffects.SPEED -> MobEffects.MOVEMENT_SPEED
+# GuiGraphics gibt es erst ab 1.20 – stattdessen der Nachbau in net.moonvibe.compat
+net.minecraft.client.gui.GuiGraphics; -> net.moonvibe.compat.GuiGraphics;
+# Trank-Effekte waren noch keine Holder
+getEffect().value() -> getEffect()
+# Gegenstände, die es noch nicht gab
+Items.TRIAL_KEY -> Items.TRIPWIRE_HOOK
+Items.RECOVERY_COMPASS -> Items.COMPASS
+# Texte: vor 1.19 eigene Klassen für einfachen und übersetzten Text
+import net.minecraft.network.chat.Component; -> import net.minecraft.network.chat.*;
+Component.literal( -> new TextComponent(
+Component.translatable( -> new TranslatableComponent(
+Component.empty() -> TextComponent.EMPTY.copy()
+# Gson ist hier noch Version 2.8.0
+JsonParser.parseString( -> new JsonParser().parse(

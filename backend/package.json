@@ -1,0 +1,19 @@
+{
+  "name": "moonvibe-backend",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Cosmetics-Server für moonvibe (Cloudflare Worker)",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler d1 migrations apply moonvibe --local && wrangler dev --var MOONVIBE_DEV:1",
+    "deploy": "wrangler d1 migrations apply moonvibe --remote && wrangler deploy",
+    "capes": "node tools/capes.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "wrangler": "4.156.0"
+  }
+}

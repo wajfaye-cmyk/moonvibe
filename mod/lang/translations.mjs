@@ -1,0 +1,190 @@
+// Alle Texte der Moonvibe-Mod in allen Sprachen. Daraus entstehen die Minecraft-Sprachdateien:
+//   node lang/translations.mjs   →   src/main/resources/assets/moonvibe/lang/*.json
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const LANGS = ['en_us', 'de_de', 'fr_fr', 'es_es', 'tr_tr', 'ru_ru'];
+
+// Reihenfolge der Werte: en, de, fr, es, tr, ru
+const T = {
+  'key.category.moonvibe.main': ['Moonvibe', 'Moonvibe', 'Moonvibe', 'Moonvibe', 'Moonvibe', 'Moonvibe'],
+  'key.moonvibe.zoom': ['Zoom', 'Zoom', 'Zoom', 'Zoom', 'Yakınlaştır', 'Приближение'],
+  'key.moonvibe.menu': ['Open Moonvibe menu', 'Moonvibe-Menü öffnen', 'Ouvrir le menu Moonvibe', 'Abrir menú de Moonvibe', 'Moonvibe menüsünü aç', 'Открыть меню Moonvibe'],
+
+  'moonvibe.menu.title': ['Moonvibe menu', 'Moonvibe-Menü', 'Menu Moonvibe', 'Menú de Moonvibe', 'Moonvibe menüsü', 'Меню Moonvibe'],
+  'moonvibe.menu.mods': ['Mods', 'Mods', 'Mods', 'Mods', 'Modlar', 'Моды'],
+  'moonvibe.menu.hint': [
+    'Drag modules to move them · Right-click for options',
+    'Module ziehen zum Verschieben · Rechtsklick für Optionen',
+    'Glisse les modules pour les déplacer · Clic droit pour les options',
+    'Arrastra los módulos para moverlos · Clic derecho para opciones',
+    'Taşımak için modülleri sürükle · Seçenekler için sağ tık',
+    'Перетаскивайте модули · ПКМ — настройки',
+  ],
+
+  'moonvibe.mods.search': ['Search mods…', 'Mods suchen …', 'Rechercher…', 'Buscar mods…', 'Mod ara…', 'Поиск модов…'],
+  'moonvibe.mods.all': ['All mods', 'Alle Mods', 'Tous les mods', 'Todos', 'Tüm modlar', 'Все моды'],
+  'moonvibe.mods.hud': ['HUD', 'HUD', 'HUD', 'HUD', 'HUD', 'HUD'],
+  'moonvibe.mods.mechanic': ['Mechanics', 'Mechanik', 'Mécaniques', 'Mecánicas', 'Mekanikler', 'Механика'],
+  'moonvibe.mods.client': ['Client', 'Client', 'Client', 'Cliente', 'İstemci', 'Клиент'],
+  'moonvibe.mods.edit_hud': ['Edit HUD', 'HUD bearbeiten', 'Modifier le HUD', 'Editar HUD', 'HUD düzenle', 'Редактор HUD'],
+  'moonvibe.mods.empty': ['No mods found.', 'Keine Mods gefunden.', 'Aucun mod trouvé.', 'No se encontraron mods.', 'Mod bulunamadı.', 'Моды не найдены.'],
+  'moonvibe.mods.enabled': ['ENABLED', 'AKTIV', 'ACTIVÉ', 'ACTIVADO', 'AÇIK', 'ВКЛ'],
+  'moonvibe.mods.disabled': ['DISABLED', 'AUS', 'DÉSACTIVÉ', 'DESACTIVADO', 'KAPALI', 'ВЫКЛ'],
+  'moonvibe.mods.reset_position': ['Reset position & size', 'Position & Größe zurücksetzen', 'Réinitialiser position et taille', 'Restablecer posición y tamaño', 'Konumu ve boyutu sıfırla', 'Сбросить позицию и размер'],
+
+  'moonvibe.module.fps': ['FPS', 'FPS', 'FPS', 'FPS', 'FPS', 'FPS'],
+  'moonvibe.module.fps.desc': ['Shows your frames per second.', 'Zeigt deine Bilder pro Sekunde.', 'Affiche tes images par seconde.', 'Muestra tus fotogramas por segundo.', 'Saniyedeki kare sayını gösterir.', 'Показывает кадры в секунду.'],
+  'moonvibe.module.cps': ['CPS', 'CPS', 'CPS', 'CPS', 'CPS', 'CPS'],
+  'moonvibe.module.cps.desc': ['Shows your clicks per second.', 'Zeigt deine Klicks pro Sekunde.', 'Affiche tes clics par seconde.', 'Muestra tus clics por segundo.', 'Saniyedeki tıklamalarını gösterir.', 'Показывает клики в секунду.'],
+  'moonvibe.module.ping': ['Ping', 'Ping', 'Ping', 'Ping', 'Ping', 'Пинг'],
+  'moonvibe.module.ping.desc': ['Shows your latency to the server.', 'Zeigt deine Verbindung zum Server.', 'Affiche ta latence avec le serveur.', 'Muestra tu latencia con el servidor.', 'Sunucuya olan gecikmeni gösterir.', 'Показывает задержку до сервера.'],
+  'moonvibe.module.coords': ['Coordinates', 'Koordinaten', 'Coordonnées', 'Coordenadas', 'Koordinatlar', 'Координаты'],
+  'moonvibe.module.coords.desc': ['Shows your position and direction.', 'Zeigt deine Position und Richtung.', 'Affiche ta position et ta direction.', 'Muestra tu posición y dirección.', 'Konumunu ve yönünü gösterir.', 'Показывает позицию и направление.'],
+  'moonvibe.module.clock': ['Clock', 'Uhrzeit', 'Horloge', 'Reloj', 'Saat', 'Часы'],
+  'moonvibe.module.clock.desc': ['Shows the real time.', 'Zeigt die echte Uhrzeit.', "Affiche l'heure réelle.", 'Muestra la hora real.', 'Gerçek saati gösterir.', 'Показывает реальное время.'],
+  'moonvibe.module.server': ['Server Address', 'Server-Adresse', 'Adresse du serveur', 'Dirección del servidor', 'Sunucu Adresi', 'Адрес сервера'],
+  'moonvibe.module.server.desc': ['Shows the server you are playing on.', 'Zeigt, auf welchem Server du spielst.', 'Affiche le serveur sur lequel tu joues.', 'Muestra el servidor en el que juegas.', 'Oynadığın sunucuyu gösterir.', 'Показывает сервер, на котором вы играете.'],
+  'moonvibe.module.memory': ['Memory', 'Arbeitsspeicher', 'Mémoire', 'Memoria', 'Bellek', 'Память'],
+  'moonvibe.module.memory.desc': ['Shows how much RAM Minecraft uses.', 'Zeigt, wie viel RAM Minecraft nutzt.', 'Affiche la RAM utilisée par Minecraft.', 'Muestra cuánta RAM usa Minecraft.', 'Minecraft’ın kullandığı RAM’i gösterir.', 'Показывает использование ОЗУ.'],
+  'moonvibe.module.keystrokes': ['Keystrokes', 'Keystrokes', 'Touches', 'Pulsaciones', 'Tuş Göstergesi', 'Нажатия клавиш'],
+  'moonvibe.module.keystrokes.desc': ['Shows WASD, mouse buttons and space.', 'Zeigt WASD, Maustasten und Leertaste.', 'Affiche ZQSD, la souris et espace.', 'Muestra WASD, botones del ratón y espacio.', 'WASD, fare tuşları ve boşluk tuşunu gösterir.', 'Показывает WASD, кнопки мыши и пробел.'],
+  'moonvibe.module.armor': ['Armor Status', 'Rüstung', 'État de l’armure', 'Estado de armadura', 'Zırh Durumu', 'Состояние брони'],
+  'moonvibe.module.armor.desc': ['Shows your armor and its durability.', 'Zeigt deine Rüstung und ihre Haltbarkeit.', 'Affiche ton armure et sa durabilité.', 'Muestra tu armadura y su durabilidad.', 'Zırhını ve dayanıklılığını gösterir.', 'Показывает броню и её прочность.'],
+  'moonvibe.module.potions': ['Potion Effects', 'Trank-Effekte', 'Effets de potion', 'Efectos de pociones', 'İksir Etkileri', 'Эффекты зелий'],
+  'moonvibe.module.potions.desc': ['Shows active effects with time left.', 'Zeigt aktive Effekte mit Restzeit.', 'Affiche les effets actifs et leur durée.', 'Muestra los efectos activos y su tiempo.', 'Aktif etkileri ve kalan süreyi gösterir.', 'Показывает активные эффекты и время.'],
+  'moonvibe.module.zoom': ['Zoom', 'Zoom', 'Zoom', 'Zoom', 'Yakınlaştırma', 'Приближение'],
+  'moonvibe.module.zoom.desc': ['Hold C to zoom, scroll to change strength.', 'C halten zum Zoomen, Mausrad für Stärke.', 'Maintiens C pour zoomer, molette pour régler.', 'Mantén C para hacer zoom, rueda para ajustar.', 'Yakınlaştırmak için C’ye bas, tekerlek ile ayarla.', 'Удерживайте C, колесо — сила зума.'],
+  'moonvibe.module.discord': ['Discord Status', 'Discord-Status', 'Statut Discord', 'Estado de Discord', 'Discord Durumu', 'Статус Discord'],
+  'moonvibe.module.discord.desc': ['Shows in Discord that you play Moonvibe.', 'Zeigt in Discord, dass du Moonvibe spielst.', 'Affiche sur Discord que tu joues à Moonvibe.', 'Muestra en Discord que juegas Moonvibe.', 'Discord’da Moonvibe oynadığını gösterir.', 'Показывает в Discord, что вы играете в Moonvibe.'],
+  'moonvibe.module.cosmetics': ['Cosmetics', 'Cosmetics', 'Cosmétiques', 'Cosméticos', 'Kozmetikler', 'Косметика'],
+  'moonvibe.module.cosmetics.desc': ['Capes, hats and wings of Moonvibe players.', 'Capes, Hüte und Flügel von Moonvibe-Spielern.', 'Capes, chapeaux et ailes des joueurs Moonvibe.', 'Capas, sombreros y alas de jugadores de Moonvibe.', 'Moonvibe oyuncularının pelerin, şapka ve kanatları.', 'Плащи, шляпы и крылья игроков Moonvibe.'],
+
+  'moonvibe.setting.scale': ['Size', 'Größe', 'Taille', 'Tamaño', 'Boyut', 'Размер'],
+  'moonvibe.setting.background': ['Background', 'Hintergrund', 'Arrière-plan', 'Fondo', 'Arka plan', 'Фон'],
+  'moonvibe.setting.text_color': ['Text color', 'Textfarbe', 'Couleur du texte', 'Color del texto', 'Yazı rengi', 'Цвет текста'],
+  'moonvibe.setting.text_shadow': ['Text shadow', 'Textschatten', 'Ombre du texte', 'Sombra del texto', 'Yazı gölgesi', 'Тень текста'],
+  'moonvibe.setting.brackets': ['Brackets [ ]', 'Klammern [ ]', 'Crochets [ ]', 'Corchetes [ ]', 'Köşeli parantez [ ]', 'Скобки [ ]'],
+  'moonvibe.setting.show_right_click': ['Show right click', 'Rechtsklick anzeigen', 'Afficher le clic droit', 'Mostrar clic derecho', 'Sağ tıkı göster', 'Показывать ПКМ'],
+  'moonvibe.setting.show_direction': ['Show direction', 'Richtung anzeigen', 'Afficher la direction', 'Mostrar dirección', 'Yönü göster', 'Показывать направление'],
+  'moonvibe.setting.twelve_hour': ['12-hour format', '12-Stunden-Format', 'Format 12 heures', 'Formato de 12 horas', '12 saat biçimi', '12-часовой формат'],
+  'moonvibe.setting.show_mouse': ['Show mouse buttons', 'Maustasten anzeigen', 'Afficher les boutons de la souris', 'Mostrar botones del ratón', 'Fare tuşlarını göster', 'Показывать кнопки мыши'],
+  'moonvibe.setting.show_space': ['Show space bar', 'Leertaste anzeigen', 'Afficher la barre espace', 'Mostrar barra espaciadora', 'Boşluk tuşunu göster', 'Показывать пробел'],
+  'moonvibe.setting.pressed_color': ['Pressed color', 'Farbe beim Drücken', 'Couleur appuyée', 'Color al pulsar', 'Basılı renk', 'Цвет нажатия'],
+  'moonvibe.setting.show_hand': ['Show held item', 'Gegenstand in der Hand', 'Afficher l’objet en main', 'Mostrar objeto en mano', 'Eldeki eşyayı göster', 'Показывать предмет в руке'],
+  'moonvibe.setting.durability_percent': ['Durability in %', 'Haltbarkeit in %', 'Durabilité en %', 'Durabilidad en %', 'Dayanıklılık %', 'Прочность в %'],
+  'moonvibe.setting.zoom_level': ['Zoom strength', 'Zoomstärke', 'Puissance du zoom', 'Fuerza del zoom', 'Yakınlaştırma gücü', 'Сила приближения'],
+  'moonvibe.setting.smooth_camera': ['Smooth camera', 'Weiche Kamera', 'Caméra fluide', 'Cámara suave', 'Yumuşak kamera', 'Плавная камера'],
+  'moonvibe.setting.scroll_to_zoom': ['Scroll to adjust', 'Mausrad zum Anpassen', 'Molette pour ajuster', 'Rueda para ajustar', 'Tekerlek ile ayarla', 'Колесо для настройки'],
+  'moonvibe.setting.smooth_transition': ['Smooth transition', 'Weicher Übergang', 'Transition fluide', 'Transición suave', 'Yumuşak geçiş', 'Плавный переход'],
+  'moonvibe.setting.show_server': ['Show server address', 'Server-Adresse anzeigen', 'Afficher l’adresse du serveur', 'Mostrar dirección del servidor', 'Sunucu adresini göster', 'Показывать адрес сервера'],
+  'moonvibe.setting.show_own': ['Show my cosmetics', 'Eigene Cosmetics anzeigen', 'Afficher mes cosmétiques', 'Mostrar mis cosméticos', 'Kendi kozmetiklerimi göster', 'Показывать мою косметику'],
+  'moonvibe.setting.show_others': ['Show others’ cosmetics', 'Cosmetics anderer anzeigen', 'Afficher les cosmétiques des autres', 'Mostrar cosméticos de otros', 'Diğerlerinin kozmetiklerini göster', 'Показывать чужую косметику'],
+  'moonvibe.setting.animations': ['Animations', 'Animationen', 'Animations', 'Animaciones', 'Animasyonlar', 'Анимации'],
+
+  'moonvibe.direction.north': ['North', 'Norden', 'Nord', 'Norte', 'Kuzey', 'Север'],
+  'moonvibe.direction.south': ['South', 'Süden', 'Sud', 'Sur', 'Güney', 'Юг'],
+  'moonvibe.direction.east': ['East', 'Osten', 'Est', 'Este', 'Doğu', 'Восток'],
+  'moonvibe.direction.west': ['West', 'Westen', 'Ouest', 'Oeste', 'Batı', 'Запад'],
+  'moonvibe.hud.singleplayer': ['Singleplayer', 'Einzelspieler', 'Solo', 'Un jugador', 'Tek oyunculu', 'Одиночная игра'],
+
+  'moonvibe.title.mods': ['Mods', 'Mods', 'Mods', 'Mods', 'Modlar', 'Моды'],
+  'moonvibe.title.logged_in': ['Logged in as %s', 'Angemeldet als %s', 'Connecté en tant que %s', 'Conectado como %s', '%s olarak giriş yapıldı', 'Вы вошли как %s'],
+
+  'moonvibe.discord.menu': ['In the main menu', 'Im Hauptmenü', 'Dans le menu principal', 'En el menú principal', 'Ana menüde', 'В главном меню'],
+  'moonvibe.discord.singleplayer': ['Playing singleplayer', 'Spielt Einzelspieler', 'Joue en solo', 'Jugando un jugador', 'Tek oyunculu oynuyor', 'Играет в одиночную игру'],
+  'moonvibe.discord.multiplayer': ['Playing multiplayer', 'Spielt Mehrspieler', 'Joue en multijoueur', 'Jugando multijugador', 'Çok oyunculu oynuyor', 'Играет по сети'],
+  'moonvibe.discord.server': ['On %s', 'Auf %s', 'Sur %s', 'En %s', '%s sunucusunda', 'На %s'],
+  'moonvibe.menu.cosmetics': ['Cosmetics', 'Cosmetics', 'Cosmétiques', 'Cosméticos', 'Kozmetikler', 'Косметика'],
+  'moonvibe.cosmetics.title': ['Cosmetics', 'Cosmetics', 'Cosmétiques', 'Cosméticos', 'Kozmetikler', 'Косметика'],
+  'moonvibe.cosmetics.search': ['Search…', 'Suchen …', 'Rechercher…', 'Buscar…', 'Ara…', 'Поиск…'],
+  'moonvibe.cosmetics.category.cape': ['Capes', 'Capes', 'Capes', 'Capas', 'Pelerinler', 'Плащи'],
+  'moonvibe.cosmetics.category.hat': ['Hats', 'Hüte', 'Chapeaux', 'Sombreros', 'Şapkalar', 'Шляпы'],
+  'moonvibe.cosmetics.category.face': ['Face', 'Gesicht', 'Visage', 'Cara', 'Yüz', 'Лицо'],
+  'moonvibe.cosmetics.category.back': ['Back', 'Rücken', 'Dos', 'Espalda', 'Sırt', 'Спина'],
+  'moonvibe.cosmetics.category.wings': ['Wings', 'Flügel', 'Ailes', 'Alas', 'Kanatlar', 'Крылья'],
+  'moonvibe.cosmetics.category.shoes': ['Shoes', 'Schuhe', 'Chaussures', 'Zapatillas', 'Ayakkabılar', 'Обувь'],
+  'moonvibe.cosmetics.category.pet': ['Pets', 'Begleiter', 'Compagnons', 'Mascotas', 'Evcil dostlar', 'Питомцы'],
+  'moonvibe.cosmetics.none': ['None', 'Keins', 'Aucun', 'Ninguno', 'Yok', 'Нет'],
+  'moonvibe.cosmetics.loading': ['Loading cosmetics…', 'Cosmetics werden geladen …', 'Chargement des cosmétiques…', 'Cargando cosméticos…', 'Kozmetikler yükleniyor…', 'Загрузка косметики…'],
+  'moonvibe.cosmetics.offline': ['Cosmetics server not reachable.', 'Cosmetics-Server nicht erreichbar.', 'Serveur de cosmétiques injoignable.', 'No se puede conectar con el servidor.', 'Kozmetik sunucusuna ulaşılamıyor.', 'Сервер косметики недоступен.'],
+  'moonvibe.cosmetics.saving': ['Saving…', 'Speichern …', 'Enregistrement…', 'Guardando…', 'Kaydediliyor…', 'Сохранение…'],
+  'moonvibe.cosmetics.equipped': ['%s equipped', '%s angezogen', '%s équipé', '%s equipado', '%s kuşanıldı', '%s: надето'],
+  'moonvibe.cosmetics.removed': ['Removed', 'Abgelegt', 'Retiré', 'Quitado', 'Çıkarıldı', 'Снято'],
+  'moonvibe.cosmetics.error': ['Could not save.', 'Speichern fehlgeschlagen.', 'Échec de l’enregistrement.', 'No se pudo guardar.', 'Kaydedilemedi.', 'Не удалось сохранить.'],
+  'moonvibe.cosmetics.error_login': ['Microsoft account required.', 'Microsoft-Account nötig.', 'Compte Microsoft requis.', 'Se necesita cuenta de Microsoft.', 'Microsoft hesabı gerekli.', 'Нужен аккаунт Microsoft.'],
+  'moonvibe.cosmetics.drag': ['Drag to rotate', 'Ziehen zum Drehen', 'Glisse pour tourner', 'Arrastra para girar', 'Döndürmek için sürükle', 'Тяните, чтобы вращать'],
+  'moonvibe.rarity.common': ['COMMON', 'GEWÖHNLICH', 'COMMUN', 'COMÚN', 'SIRADAN', 'ОБЫЧНЫЙ'],
+  'moonvibe.rarity.rare': ['RARE', 'SELTEN', 'RARE', 'RARO', 'NADİR', 'РЕДКИЙ'],
+  'moonvibe.rarity.epic': ['EPIC', 'EPISCH', 'ÉPIQUE', 'ÉPICO', 'DESTANSI', 'ЭПИЧЕСКИЙ'],
+  'moonvibe.rarity.legendary': ['LEGENDARY', 'LEGENDÄR', 'LÉGENDAIRE', 'LEGENDARIO', 'EFSANEVİ', 'ЛЕГЕНДАРНЫЙ'],
+  'moonvibe.module.togglesprint': ['Toggle Sprint', 'Toggle Sprint', 'Sprint automatique', 'Sprint automático', 'Sabit Koşma', 'Авто-спринт'],
+  'moonvibe.module.togglesprint.desc': ['Sprint and sneak without holding the key.', 'Sprinten und Schleichen ohne Taste halten.', 'Sprinter et s’accroupir sans maintenir la touche.', 'Corre y agáchate sin mantener la tecla.', 'Tuşa basılı tutmadan koş ve eğil.', 'Бег и присед без удержания клавиши.'],
+  'moonvibe.module.combo': ['Combo Counter', 'Combo-Zähler', 'Compteur de combo', 'Contador de combo', 'Kombo Sayacı', 'Счётчик комбо'],
+  'moonvibe.module.combo.desc': ['Counts your hits in a row.', 'Zählt deine Treffer in Folge.', 'Compte tes coups d’affilée.', 'Cuenta tus golpes seguidos.', 'Art arda vuruşlarını sayar.', 'Считает удары подряд.'],
+  'moonvibe.module.reach': ['Reach Display', 'Reichweite', 'Portée', 'Alcance', 'Menzil', 'Дистанция удара'],
+  'moonvibe.module.reach.desc': ['Shows the distance of your last hit.', 'Zeigt die Entfernung deines letzten Treffers.', 'Affiche la distance de ton dernier coup.', 'Muestra la distancia de tu último golpe.', 'Son vuruşunun mesafesini gösterir.', 'Показывает дистанцию последнего удара.'],
+  'moonvibe.module.speed': ['Speedometer', 'Geschwindigkeit', 'Compteur de vitesse', 'Velocímetro', 'Hız Göstergesi', 'Спидометр'],
+  'moonvibe.module.speed.desc': ['Shows how fast you move.', 'Zeigt, wie schnell du dich bewegst.', 'Affiche ta vitesse de déplacement.', 'Muestra lo rápido que te mueves.', 'Ne kadar hızlı hareket ettiğini gösterir.', 'Показывает скорость передвижения.'],
+  'moonvibe.module.compass': ['Compass', 'Kompass', 'Boussole', 'Brújula', 'Pusula', 'Компас'],
+  'moonvibe.module.compass.desc': ['A compass bar at the top of your screen.', 'Eine Kompass-Leiste oben am Bildschirm.', 'Une barre de boussole en haut de l’écran.', 'Una barra de brújula arriba en la pantalla.', 'Ekranın üstünde bir pusula çubuğu.', 'Полоска компаса вверху экрана.'],
+  'moonvibe.module.items': ['Item Counter', 'Item-Zähler', 'Compteur d’objets', 'Contador de objetos', 'Eşya Sayacı', 'Счётчик предметов'],
+  'moonvibe.module.items.desc': ['Counts arrows, pearls, apples and more.', 'Zählt Pfeile, Perlen, Äpfel und mehr.', 'Compte flèches, perles, pommes et plus.', 'Cuenta flechas, perlas, manzanas y más.', 'Ok, inci, elma ve fazlasını sayar.', 'Считает стрелы, жемчуг, яблоки и др.'],
+  'moonvibe.module.crosshair': ['Crosshair', 'Fadenkreuz', 'Réticule', 'Mira', 'Nişangah', 'Прицел'],
+  'moonvibe.module.crosshair.desc': ['Your own crosshair: shape, color and size.', 'Eigenes Fadenkreuz: Form, Farbe und Größe.', 'Ton propre réticule : forme, couleur, taille.', 'Tu propia mira: forma, color y tamaño.', 'Kendi nişangahın: şekil, renk ve boyut.', 'Свой прицел: форма, цвет и размер.'],
+  'moonvibe.setting.toggle_sprint': ['Toggle sprint', 'Sprinten umschalten', 'Sprint automatique', 'Sprint automático', 'Koşmayı sabitle', 'Переключать бег'],
+  'moonvibe.setting.toggle_sneak': ['Toggle sneak', 'Schleichen umschalten', 'Accroupi automatique', 'Agacharse automático', 'Eğilmeyi sabitle', 'Переключать присед'],
+  'moonvibe.setting.show_degrees': ['Show degrees', 'Grad anzeigen', 'Afficher les degrés', 'Mostrar grados', 'Dereceyi göster', 'Показывать градусы'],
+  'moonvibe.setting.count_arrows': ['Arrows', 'Pfeile', 'Flèches', 'Flechas', 'Oklar', 'Стрелы'],
+  'moonvibe.setting.count_pearls': ['Ender pearls', 'Enderperlen', 'Perles de l’Ender', 'Perlas de Ender', 'Ender incileri', 'Жемчуг Края'],
+  'moonvibe.setting.count_gapples': ['Golden apples', 'Goldäpfel', 'Pommes dorées', 'Manzanas doradas', 'Altın elmalar', 'Золотые яблоки'],
+  'moonvibe.setting.count_totems': ['Totems', 'Totems', 'Totems', 'Tótems', 'Totemler', 'Тотемы'],
+  'moonvibe.setting.count_potions': ['Splash potions', 'Wurftränke', 'Potions jetables', 'Pociones arrojadizas', 'Fırlatılabilir iksirler', 'Взрывные зелья'],
+  'moonvibe.setting.crosshair_style': ['Style', 'Form', 'Forme', 'Forma', 'Şekil', 'Форма'],
+  'moonvibe.setting.color': ['Color', 'Farbe', 'Couleur', 'Color', 'Renk', 'Цвет'],
+  'moonvibe.setting.crosshair_size': ['Length', 'Länge', 'Longueur', 'Longitud', 'Uzunluk', 'Длина'],
+  'moonvibe.setting.crosshair_gap': ['Gap', 'Abstand', 'Écart', 'Separación', 'Boşluk', 'Зазор'],
+  'moonvibe.setting.crosshair_thickness': ['Thickness', 'Dicke', 'Épaisseur', 'Grosor', 'Kalınlık', 'Толщина'],
+  'moonvibe.setting.outline': ['Outline', 'Umrandung', 'Contour', 'Contorno', 'Dış çizgi', 'Обводка'],
+  'moonvibe.choice.cross': ['Cross', 'Kreuz', 'Croix', 'Cruz', 'Artı', 'Крест'],
+  'moonvibe.choice.dot': ['Dot', 'Punkt', 'Point', 'Punto', 'Nokta', 'Точка'],
+  'moonvibe.choice.circle': ['Circle', 'Kreis', 'Cercle', 'Círculo', 'Daire', 'Круг'],
+  'moonvibe.choice.cross_dot': ['Cross + dot', 'Kreuz + Punkt', 'Croix + point', 'Cruz + punto', 'Artı + nokta', 'Крест + точка'],
+  'moonvibe.hud.sprinting': ['Sprinting', 'Sprintet', 'Sprint', 'Corriendo', 'Koşuyor', 'Бег'],
+  'moonvibe.hud.sprinting_toggled': ['Sprinting (Toggled)', 'Sprintet (Umschalten)', 'Sprint (auto)', 'Corriendo (auto)', 'Koşuyor (sabit)', 'Бег (авто)'],
+  'moonvibe.hud.sneaking': ['Sneaking', 'Schleicht', 'Accroupi', 'Agachado', 'Eğiliyor', 'Присед'],
+  'moonvibe.hud.sneaking_toggled': ['Sneaking (Toggled)', 'Schleicht (Umschalten)', 'Accroupi (auto)', 'Agachado (auto)', 'Eğiliyor (sabit)', 'Присед (авто)'],
+  'moonvibe.hud.walking': ['Walking', 'Geht', 'Marche', 'Caminando', 'Yürüyor', 'Ходьба'],
+  'moonvibe.hud.combo': ['Combo: %s', 'Combo: %s', 'Combo : %s', 'Combo: %s', 'Kombo: %s', 'Комбо: %s'],
+  'moonvibe.hud.blocks': ['blocks', 'Blöcke', 'blocs', 'bloques', 'blok', 'бл.'],
+  'moonvibe.hud.reach_none': ['No hits', 'Keine Treffer', 'Aucun coup', 'Sin golpes', 'Vuruş yok', 'Нет ударов'],
+  'moonvibe.hud.bps': ['b/s', 'B/s', 'b/s', 'b/s', 'b/s', 'бл/с'],
+  'moonvibe.cosmetics.custom_cape': ['Custom Cape', 'Eigenes Cape', 'Cape perso', 'Capa propia', 'Özel Pelerin', 'Свой плащ'],
+  'moonvibe.cosmetics.upload': ['Upload cape', 'Cape hochladen', 'Importer', 'Subir capa', 'Pelerin yükle', 'Загрузить'],
+  'moonvibe.cosmetics.upload_hint': ['Click or drop image', 'Klicken oder Bild reinziehen', 'Clique ou glisse', 'Clic o arrastra', 'Tıkla veya sürükle', 'Нажми или перетащи'],
+  'moonvibe.cosmetics.upload_click': ['Click to choose image', 'Klicken für Bildauswahl', 'Clique pour choisir', 'Clic para elegir', 'Resim seçmek için tıkla', 'Нажми, чтобы выбрать'],
+  'moonvibe.cosmetics.uploading': ['Uploading cape…', 'Cape wird hochgeladen …', 'Envoi de la cape…', 'Subiendo capa…', 'Pelerin yükleniyor…', 'Загрузка плаща…'],
+  'moonvibe.cosmetics.cape_saved': ['Your cape is live!', 'Dein Cape ist live!', 'Ta cape est en ligne !', '¡Tu capa está activa!', 'Pelerinin yayında!', 'Плащ готов!'],
+  'moonvibe.cosmetics.image_error': ['Only PNG or JPG images.', 'Nur PNG- oder JPG-Bilder.', 'Images PNG ou JPG uniquement.', 'Solo imágenes PNG o JPG.', 'Sadece PNG veya JPG.', 'Только PNG или JPG.'],
+  'moonvibe.cosmetics.images': ['Images', 'Bilder', 'Images', 'Imágenes', 'Resimler', 'Изображения'],
+  'moonvibe.rarity.custom': ['CUSTOM', 'EIGENES', 'PERSO', 'PROPIA', 'ÖZEL', 'СВОЁ'],
+};
+
+const out = join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'main', 'resources', 'assets', 'moonvibe', 'lang');
+mkdirSync(out, { recursive: true });
+const legacyOut = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'mod-legacy', 'src', 'main', 'resources', 'assets', 'moonvibe', 'lang');
+mkdirSync(legacyOut, { recursive: true });
+LANGS.forEach((lang, i) => {
+  const data = {};
+  for (const [key, values] of Object.entries(T)) {
+    if (values.length !== LANGS.length) throw new Error(`${key}: ${values.length} statt ${LANGS.length} Übersetzungen`);
+    data[key] = values[i];
+  }
+  writeFileSync(join(out, `${lang}.json`), JSON.stringify(data, null, '\t') + '\n');
+  // Minecraft 1.8.9 (../mod-legacy) liest .lang-Dateien: "schlüssel=text", Sprachcode wie en_US
+  const legacyName = lang.replace(/_(..)$/, (_, region) => `_${region.toUpperCase()}`);
+  const lines = Object.entries(data).map(([key, value]) => `${key}=${value.replace(/\n/g, ' ')}`);
+  writeFileSync(join(legacyOut, `${legacyName}.lang`), lines.join('\n') + '\n');
+  console.log(`${lang}.json + ${legacyName}.lang: ${Object.keys(data).length} Texte`);
+});

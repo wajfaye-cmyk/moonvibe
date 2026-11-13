@@ -1,0 +1,34 @@
+name: Bug report
+description: Something in the launcher or the client mod does not work.
+labels: [bug]
+body:
+  - type: dropdown
+    id: part
+    attributes:
+      label: Where does it happen?
+      options:
+        - Launcher
+        - In game (client mod)
+        - Cosmetics server
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Minecraft version
+      placeholder: e.g. 1.8.9 or 26.3
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Game console
+      description: If the game crashed, paste the last lines from launcher → Settings → Game console. Remove anything personal first.
+      render: text

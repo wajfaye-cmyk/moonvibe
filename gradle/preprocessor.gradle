@@ -1,0 +1,126 @@
+// Präprozessor für moonvibe: EIN Quelltext für mehrere Minecraft-Versionen.
+// Wird von mod/ und mod-legacy/ eingebunden (apply from). Erwartet ext.mcVersion.
+//
+// Versionsabhängiger Code steht in Kommentar-Blöcken, die vor dem Kompilieren aufgelöst werden:
+//   //#if MC >= 26.1
+//   neuer Code
+//   //#else
+//   //$$ alter Code (auskommentiert, damit die Datei für die Hauptversion normal aussieht)
+//   //#endif
+// Reine Umbenennungen stehen in versions/<version>.renames ("alt -> neu", ein Wort = ganzer Name).
+//
+// Danach gibt es: Task preprocessJava (Quelltext für mcVersion) und ext.mcAtLeast('1.20').
+/** Löst //#if-Blöcke für eine Minecraft-Version auf. */
+class Preprocessor {
+	static int compare(String a, String b) {
+		def x = a.tokenize('.').collect { it as int }
+		def y = b.tokenize('.').collect { it as int }
+		for (int i = 0; i < Math.max(x.size(), y.size()); i++) {
+			int d = (i < x.size() ? x[i] : 0) - (i < y.size() ? y[i] : 0)
+			if (d != 0) return d
+		}
+		return 0
+	}
+
+	/** Bedingung wie "MC >= 1.21.9" oder "MC >= 1.21.9 && MC < 26.1" */
+	static boolean test(String condition, String mc, String where) {
+		return condition.split('&&').every { part ->
+			def m = part.trim() =~ /^MC\s*(>=|<=|==|!=|>|<)\s*([0-9.]+)$/
+			if (!m.matches()) throw new IllegalArgumentException("Ungültige Bedingung '${part.trim()}' in ${where}")
+			int c = compare(mc, m.group(2))
+			switch (m.group(1)) {
+				case '>=': return c >= 0
+				case '<=': return c <= 0
+				case '>': return c > 0
+				case '<': return c < 0
+				case '==': return c == 0
+				default: return c != 0
+			}
+		}
+	}
+
+	/** Umbenennungen anwenden: ganze Wörter (Klassen-/Methodennamen) oder wörtliche Textstücke wie "g.text(". */
+	static String rename(String line, List<List<String>> renames) {
+		for (def r : renames) {
+			line = r[0] ==~ /\w+/ ? line.replaceAll('\\b' + r[0] + '\\b', r[1]) : line.replace(r[0], r[1])
+		}
+		return line
+	}
+
+	static String process(String text, String mc, String where, List<List<String>> renames = []) {
+		def out = new StringBuilder()
+		// je offener Block: [Eltern aktiv?, schon ein Zweig genommen?]
+		def stack = []
+		boolean active = true
+		int lineNo = 0
+		text.eachLine { line ->
+			lineNo++
+			def t = line.trim()
+			if (t.startsWith('//#if ')) {
+				boolean cond = test(t.substring(6), mc, "${where}:${lineNo}")
+				stack.add([active, cond])
+				active = active && cond
+			} else if (t.startsWith('//#elseif ')) {
+				def top = stack.last()
+				boolean cond = !top[1] && test(t.substring(10), mc, "${where}:${lineNo}")
+				top[1] = top[1] || cond
+				active = top[0] && cond
+			} else if (t == '//#else') {
+				def top = stack.last()
+				active = top[0] && !top[1]
+				top[1] = true
+			} else if (t == '//#endif') {
+				active = stack.removeLast()[0]
+			} else if (active) {
+				// Zeilen alter Versionen sind mit "//$$ " auskommentiert
+				out.append(rename(line.replaceFirst(/^(\s*)\/\/\$\$ ?/, '$1'), renames))
+			}
+			// Zeilenzahl bleibt gleich, damit Fehlermeldungen auf die richtige Zeile zeigen
+			out.append('\n')
+		}
+		if (!stack.isEmpty()) throw new IllegalArgumentException("//#if ohne //#endif in ${where}")
+		return out.toString()
+	}
+}
+
+abstract class PreprocessTask extends DefaultTask {
+	@InputDirectory
+	abstract DirectoryProperty getSource()
+
+	@OutputDirectory
+	abstract DirectoryProperty getTarget()
+
+	@Input
+	abstract Property<String> getMinecraft()
+
+	/** Umbenennungen als "alt -> neu" */
+	@Input
+	abstract ListProperty<String> getRenames()
+
+	@TaskAction
+	void run() {
+		def src = source.get().asFile
+		def dst = target.get().asFile
+		dst.deleteDir()
+		src.eachFileRecurse(groovy.io.FileType.FILES) { f ->
+			def rel = src.toPath().relativize(f.toPath()).toString()
+			def out = new File(dst, rel)
+			out.parentFile.mkdirs()
+			def renames = getRenames().get().collect { it.split(' -> ', 2).toList() }
+			out.setText(Preprocessor.process(f.getText('UTF-8'), minecraft.get(), rel, renames), 'UTF-8')
+		}
+	}
+}
+
+def preprocessJava = tasks.register('preprocessJava', PreprocessTask) {
+	source = file('src/main/java')
+	target = layout.buildDirectory.dir('preprocessed/java')
+	minecraft = project.ext.mcVersion
+	def renameFile = file("versions/${project.ext.mcVersion}.renames")
+	renames = renameFile.exists() ? renameFile.readLines('UTF-8').collect { it.trim() }.findAll { it && !it.startsWith('#') } : []
+}
+
+sourceSets.main.java.srcDirs = [preprocessJava.map { it.target }]
+
+/** Ist die gebaute Minecraft-Version mindestens v? (für Unterschiede in Gradle selbst) */
+ext.mcAtLeast = { String v -> Preprocessor.compare(project.ext.mcVersion.toString(), v) >= 0 }

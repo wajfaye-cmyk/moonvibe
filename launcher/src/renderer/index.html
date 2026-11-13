@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' https: http://localhost:* http://127.0.0.1:* data: blob:; style-src 'self'; script-src 'self'; font-src 'self'"
+    />
+    <title>Moonvibe</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Hintergrund: bewegtes Minecraft-Panorama -->
+    <div class="backdrop">
+      <div class="panorama" id="panorama"></div>
+      <div class="backdrop-tint"></div>
+    </div>
+
+    <!-- Startbildschirm -->
+    <div class="splash" id="splash">
+      <img src="assets/wordmark.png" alt="Moonvibe" class="splash-logo" />
+      <div class="splash-bar"><div></div></div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/logo-main.png" alt="" class="brand-icon" />
+        <span class="brand-name">Moonvibe</span>
+      </div>
+      <nav class="nav" id="nav">
+        <button type="button" class="nav-item active" data-page="home">
+          <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" /></svg>
+          <span data-i18n="nav.home"></span>
+        </button>
+        <button type="button" class="nav-item" data-page="servers">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="2" /><rect x="3" y="13" width="18" height="7" rx="2" /><path d="M7 7.5h.01M7 16.5h.01" /></svg>
+          <span data-i18n="nav.servers"></span>
+        </button>
+        <button type="button" class="nav-item" data-page="cosmetics">
+          <svg viewBox="0 0 24 24"><path d="M8 3l4 3 4-3 5 4-3 4h-2v10H8V11H6L3 7z" /></svg>
+          <span data-i18n="nav.cosmetics"></span>
+        </button>
+        <button type="button" class="nav-item" data-page="mods">
+          <svg viewBox="0 0 24 24"><path d="M10 3h4v3a2 2 0 1 0 4 0V3h3v7h-3a2 2 0 1 0 0 4h3v7h-7v-3a2 2 0 1 0-4 0v3H3v-7h3a2 2 0 1 0 0-4H3V3h7z" /></svg>
+          <span data-i18n="nav.mods"></span>
+        </button>
+        <button type="button" class="nav-item" data-page="settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" /></svg>
+          <span data-i18n="nav.settings"></span>
+        </button>
+        <span class="nav-indicator" id="nav-indicator"></span>
+      </nav>
+      <div class="topbar-right">
+        <div id="language-picker"></div>
+        <button class="account-chip" id="account-chip" type="button">
+          <img id="account-avatar" class="avatar" alt="" src="" />
+          <span id="account-name"></span>
+        </button>
+        <div class="window-buttons">
+          <button type="button" data-window="minimize" aria-label="Minimize"><svg viewBox="0 0 24 24"><path d="M5 12h14" /></svg></button>
+          <button type="button" data-window="close" aria-label="Close" class="close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Startseite -->
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div class="hero-sky" aria-hidden="true"></div>
+          <img src="assets/logo-main.png" alt="" class="hero-moon" />
+          <div class="hero-center">
+            <p class="hero-greeting"><span id="welcome-line"></span> <span class="hero-name" id="welcome-name"></span></p>
+            <div class="launch-group">
+              <button type="button" id="play-button" class="play-button">
+                <span class="play-fill" id="play-fill"></span>
+                <span class="play-label" id="play-label"></span>
+                <span class="play-sub" id="play-sub"></span>
+              </button>
+              <div id="version-picker" class="version-picker"></div>
+            </div>
+            <div class="progress" id="progress" hidden>
+              <span id="progress-stage"></span><span id="progress-count"></span>
+            </div>
+            <p class="error" id="play-error" hidden></p>
+            <p class="tagline" data-i18n="home.tagline"></p>
+          </div>
+          <div class="home-character">
+            <canvas id="home-canvas"></canvas>
+            <div class="nameplate" id="nameplate"></div>
+          </div>
+        </div>
+
+        <div class="server-strip-wrap">
+          <div class="server-strip" id="server-mini-list"></div>
+          <button type="button" class="link" data-goto="servers" data-i18n="home.viewAll"></button>
+        </div>
+
+        <div class="home-news">
+          <h2 class="section-title" data-i18n="home.newsTitle"></h2>
+          <div class="news-grid" id="news-grid"></div>
+        </div>
+
+        <div class="crash glass" id="crash-box" hidden>
+          <div class="crash-head">
+            <strong data-i18n="home.crashTitle"></strong>
+            <button type="button" class="link" id="crash-close" data-i18n="home.crashClose"></button>
+          </div>
+          <pre id="crash-log"></pre>
+        </div>
+      </section>
+
+      <!-- Server -->
+      <section class="page" id="page-servers">
+        <div class="page-head">
+          <div>
+            <h2 data-i18n="servers.title"></h2>
+            <p class="muted subtitle" data-i18n="servers.subtitle"></p>
+          </div>
+          <form class="add-server" id="add-server">
+            <input type="text" id="server-address" data-i18n-placeholder="servers.addPlaceholder" />
+            <button type="submit" class="primary-small" data-i18n="servers.add"></button>
+          </form>
+        </div>
+        <div class="server-grid" id="server-grid"></div>
+      </section>
+
+      <!-- Cosmetics -->
+      <section class="page" id="page-cosmetics">
+        <div class="cosmetics-layout">
+          <div class="preview-panel glass">
+            <canvas id="preview-canvas"></canvas>
+            <div class="preview-footer">
+              <div class="wearing" id="wearing"></div>
+              <span class="muted drag-hint" data-i18n="cosmetics.dragHint"></span>
+            </div>
+          </div>
+          <div class="wardrobe">
+            <div class="wardrobe-head">
+              <div>
+                <h2 data-i18n="cosmetics.title"></h2>
+                <p class="muted subtitle" data-i18n="cosmetics.subtitle"></p>
+              </div>
+              <div class="search small">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
+                <input type="search" id="cosmetic-search" data-i18n-placeholder="cosmetics.search" />
+              </div>
+            </div>
+            <div class="category-tabs" id="cosmetic-tabs"></div>
+            <p class="error" id="cosmetics-error" hidden></p>
+            <div class="cosmetic-grid" id="cosmetic-grid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mods -->
+      <section class="page" id="page-mods">
+        <div class="page-head">
+          <h2 data-i18n="mods.title"></h2>
+          <div class="page-head-right">
+            <span class="muted" data-i18n="mods.for"></span>
+            <div id="mods-version-picker"></div>
+            <button type="button" class="secondary" id="open-instance" data-i18n="mods.openFolder"></button>
+          </div>
+        </div>
+        <div class="tabs" id="mods-tabs">
+          <button type="button" class="tab active" data-type="mod" data-i18n="mods.tabMods"></button>
+          <button type="button" class="tab" data-type="resourcepack" data-i18n="mods.tabResourcepacks"></button>
+          <button type="button" class="tab" data-type="shader" data-i18n="mods.tabShaders"></button>
+        </div>
+        <div class="hint shader-hint" id="shader-hint" hidden></div>
+        <div class="mods-columns">
+          <div class="mods-browse">
+            <div class="mods-toolbar">
+              <div class="search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
+                <input type="search" id="mods-search" data-i18n-placeholder="mods.searchPlaceholder" />
+              </div>
+              <div id="mods-sort"></div>
+            </div>
+            <div class="chip-row" id="mods-categories"></div>
+            <div class="result-list" id="mods-results"></div>
+            <button type="button" class="secondary more" id="mods-more" hidden data-i18n="mods.loadMore"></button>
+          </div>
+          <div class="mods-installed glass">
+            <h3 data-i18n="mods.installedTitle"></h3>
+            <div class="result-list compact" id="mods-installed"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Einstellungen -->
+      <section class="page" id="page-settings">
+        <div class="page-head"><h2 data-i18n="settings.title"></h2></div>
+        <div class="settings">
+          <div class="setting glass">
+            <div class="setting-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></svg></div>
+            <div class="setting-text"><h3 data-i18n="settings.language"></h3><p class="muted" data-i18n="settings.languageDesc"></p></div>
+            <div id="settings-language"></div>
+          </div>
+          <div class="setting glass">
+            <div class="setting-icon"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="2" /><path d="M8 6V3M12 6V3M16 6V3M8 21v-3M12 21v-3M16 21v-3" /></svg></div>
+            <div class="setting-text"><h3 data-i18n="settings.memory"></h3><p class="muted" data-i18n="settings.memoryDesc"></p></div>
+            <div class="setting-control">
+              <input type="range" id="memory" min="1024" step="512" />
+              <span id="memory-value" class="value"></span>
+            </div>
+          </div>
+          <div class="setting glass">
+            <div class="setting-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2" /><path d="M8 21h8" /></svg></div>
+            <div class="setting-text"><h3 data-i18n="settings.behavior"></h3><p class="muted" data-i18n="settings.behaviorDesc"></p></div>
+            <div id="settings-behavior"></div>
+          </div>
+          <div class="setting glass">
+            <div class="setting-icon"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></div>
+            <div class="setting-text"><h3 data-i18n="settings.windowSize"></h3><p class="muted" data-i18n="settings.windowSizeDesc"></p></div>
+            <div class="setting-control">
+              <input type="number" id="game-width" data-i18n-placeholder="settings.width" min="640" />
+              <span class="muted">×</span>
+              <input type="number" id="game-height" data-i18n-placeholder="settings.height" min="480" />
+            </div>
+          </div>
+          <div class="setting glass">
+            <div class="setting-icon"><svg viewBox="0 0 24 24"><path d="M8 3l4 3 4-3 5 4-3 4h-2v10H8V11H6L3 7z" /></svg></div>
+            <div class="setting-text"><h3 data-i18n="settings.server"></h3><p class="muted" data-i18n="settings.serverDesc"></p></div>
+            <input type="text" id="api-url" class="wide" />
+          </div>
+          <div class="setting glass">
+            <div class="setting-icon"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg></div>
+            <div class="setting-text"><h3 data-i18n="settings.files"></h3><p class="muted path" id="data-dir"></p></div>
+            <button type="button" class="secondary" id="open-data" data-i18n="settings.openFolder"></button>
+          </div>
+        </div>
+        <div class="console glass">
+          <div class="console-head">
+            <h3 data-i18n="settings.console"></h3>
+            <button type="button" class="link" id="console-clear" data-i18n="settings.consoleClear"></button>
+          </div>
+          <pre id="console"></pre>
+        </div>
+        <p class="footer-version" id="app-version"></p>
+      </section>
+    </main>
+
+    <!-- Account-Fenster -->
+    <div class="modal" id="account-modal" hidden>
+      <div class="modal-box glass">
+        <div class="modal-head">
+          <h2 data-i18n="account.title"></h2>
+          <button type="button" class="icon-button" id="account-close" data-i18n-title="account.close">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </div>
+        <div class="account-list" id="account-list"></div>
+        <button type="button" class="ms-button" id="ms-login">
+          <span class="ms-logo"><i></i><i></i><i></i><i></i></span><span data-i18n="account.microsoft"></span>
+        </button>
+        <form class="offline-form" id="offline-form" hidden>
+          <p class="muted" data-i18n="account.offlineHint"></p>
+          <div class="offline-row">
+            <input type="text" id="offline-name" data-i18n-placeholder="account.namePlaceholder" maxlength="16" />
+            <button type="submit" class="secondary" data-i18n="account.add"></button>
+          </div>
+        </form>
+        <p class="error" id="account-error" hidden></p>
+      </div>
+    </div>
+
+    <!-- Eigenes Cape -->
+    <div class="modal" id="cape-modal" hidden>
+      <div class="modal-box glass cape-editor">
+        <div class="modal-head">
+          <h2 data-i18n="cosmetics.capeEditor"></h2>
+          <button type="button" class="icon-button" id="cape-close" data-i18n-title="cosmetics.cancel">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </div>
+        <div class="cape-editor-body">
+          <div class="cape-stage">
+            <canvas id="cape-canvas"></canvas>
+            <span class="muted drag-hint" data-i18n="cosmetics.dragHint"></span>
+          </div>
+          <div class="cape-controls">
+            <p class="muted cape-intro" data-i18n="cosmetics.capeIntro"></p>
+            <div class="cape-source">
+              <img id="cape-source" alt="" />
+              <button type="button" class="secondary" id="cape-other" data-i18n="cosmetics.otherImage"></button>
+            </div>
+            <label class="check-row" id="cape-template-row">
+              <input type="checkbox" id="cape-template" />
+              <span data-i18n="cosmetics.template"></span>
+            </label>
+            <div class="cape-options" id="cape-options">
+              <span class="field-label" data-i18n="cosmetics.fit"></span>
+              <div class="seg" id="cape-fit">
+                <button type="button" data-value="fill" data-i18n="cosmetics.fitFill"></button>
+                <button type="button" data-value="contain" data-i18n="cosmetics.fitContain"></button>
+                <button type="button" data-value="stretch" data-i18n="cosmetics.fitStretch"></button>
+              </div>
+              <span class="field-label" data-i18n="cosmetics.background"></span>
+              <div class="swatches" id="cape-colors"></div>
+              <span class="field-label" data-i18n="cosmetics.inside"></span>
+              <div class="seg" id="cape-inside">
+                <button type="button" data-value="image" data-i18n="cosmetics.insideImage"></button>
+                <button type="button" data-value="color" data-i18n="cosmetics.insideColor"></button>
+              </div>
+            </div>
+            <p class="muted cape-rules" data-i18n="cosmetics.capeRules"></p>
+            <p class="error" id="cape-error" hidden></p>
+            <div class="cape-actions">
+              <button type="button" class="secondary" id="cape-cancel" data-i18n="cosmetics.cancel"></button>
+              <button type="button" class="primary-small" id="cape-save" data-i18n="cosmetics.saveCape"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" hidden></div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
