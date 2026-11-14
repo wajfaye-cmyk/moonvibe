@@ -1,7 +1,15 @@
 name: Build Moonvibe
 
+# Builds the Windows installer. The client mod for all 17 Minecraft versions is already in
+# launcher/client-mods/, so this takes only a few minutes. Tick "Rebuild the mod" after changing
+# mod/ or mod-legacy/ - the fresh jars are then used for the installer and attached to the run.
 on:
   workflow_dispatch:
+    inputs:
+      rebuild_mod:
+        description: Rebuild the mod from source (slow, only needed after changing mod/ or mod-legacy/)
+        type: boolean
+        default: false
   push:
     tags: ['v*']
 
@@ -13,12 +21,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Java 25
+        if: ${{ inputs.rebuild_mod }}
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '25'
 
       - name: Cache Gradle
+        if: ${{ inputs.rebuild_mod }}
         uses: actions/cache@v4
         with:
           path: |
@@ -27,6 +37,7 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('mod/**/*.gradle', 'mod-legacy/**/*.gradle', 'mod/versions/*', 'mod-legacy/versions/*') }}
 
       - name: Build mod (1.14.4 - 26.3)
+        if: ${{ inputs.rebuild_mod }}
         shell: bash
         working-directory: mod
         run: |
@@ -38,6 +49,7 @@ jobs:
           done
 
       - name: Build mod-legacy (1.8.9 - 1.13.2)
+        if: ${{ inputs.rebuild_mod }}
         shell: bash
         working-directory: mod-legacy
         run: |
@@ -47,6 +59,13 @@ jobs:
             ./gradlew build -Pmc="$v" --no-daemon
             echo "::endgroup::"
           done
+
+      - name: Check bundled client mods
+        shell: bash
+        run: |
+          count=$(ls launcher/client-mods/*/*.jar | wc -l)
+          echo "Client mods: $count versions"
+          test "$count" -ge 17
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -68,6 +87,7 @@ jobs:
           path: launcher/release/*.exe
 
       - name: Upload client mods
+        if: ${{ inputs.rebuild_mod }}
         uses: actions/upload-artifact@v4
         with:
           name: Moonvibe-client-mods

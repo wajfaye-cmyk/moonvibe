@@ -6,7 +6,7 @@ import type { Cosmetic, CosmeticSlot, CosmeticsState, Equipment, NewsItem, Rarit
 import { fetchJson, HttpError, postJson } from '../core/http';
 import { joinSession } from '../core/microsoft';
 import { selectedAccount, validMinecraftToken } from './accounts';
-import { apiUrl as api, DEV_MODE, getAccountsFile, getSettings, type StoredAccount } from './store';
+import { apiUrl as api, getAccountsFile, getSettings, isLocalApi, offlineKey, type StoredAccount } from './store';
 
 const t = (key: Parameters<typeof translate>[1]) => translate(getSettings().language, key);
 const NOTHING: Equipment = { cape: null, hat: null, face: null, back: null, wings: null, shoes: null, pet: null };
@@ -35,6 +35,11 @@ export async function cosmeticsSession(account: StoredAccount): Promise<string> 
   const key = `${account.id}@${api()}`;
   const cached = sessions.get(key);
   if (cached && cached.expiresAt - Date.now() > 24 * 60 * 60 * 1000) return cached.token;
+  if (account.type === 'offline') {
+    const session = await offlineSession(account);
+    sessions.set(key, session);
+    return session.token;
+  }
   const accessToken = await validMinecraftToken(account);
   // nach einer Token-Erneuerung stehen Name/UUID frisch in der Account-Datei
   const fresh = getAccountsFile().accounts.find((a) => a.id === account.id) ?? account;
@@ -45,19 +50,35 @@ export async function cosmeticsSession(account: StoredAccount): Promise<string> 
   return session.token;
 }
 
+/**
+ * Username accounts on a shared cosmetics server: the first launcher that uses a name reserves it with
+ * the secret of its installation, so nobody else can change that player's cosmetics.
+ */
+async function offlineSession(account: StoredAccount): Promise<{ token: string; expiresAt: number }> {
+  try {
+    return await postJson<{ token: string; expiresAt: number }>(`${api()}/api/auth/offline`, { name: account.name, key: offlineKey() });
+  } catch (e) {
+    if (e instanceof HttpError && e.status === 409) throw new LocalizedError('cosmetics.nameTaken');
+    if (e instanceof HttpError && (e.status === 403 || e.status === 404)) throw new LocalizedError('cosmetics.offlineNotAllowed');
+    throw e;
+  }
+}
+
+/** Does the game need a session for the cosmetics server? (not for the built-in one) */
+export function needsCosmeticsSession(): boolean {
+  return Boolean(api()) && !isLocalApi();
+}
+
 async function authHeaders(): Promise<Record<string, string>> {
   const account = selectedAccount();
   if (!account) throw new LocalizedError('cosmetics.loginRequired');
-  if (account.type === 'offline') {
-    // Nur zum Testen: der Server akzeptiert das nur, wenn er im Testmodus läuft.
-    if (!DEV_MODE) throw new LocalizedError('cosmetics.microsoftOnly');
-    return { 'X-Dev-Uuid': account.uuid };
-  }
+  // Built-in server on this PC: the UUID is enough.
+  if (isLocalApi()) return { 'X-Dev-Uuid': account.uuid };
   return { Authorization: `Bearer ${await cosmeticsSession(account)}` };
 }
 
 export async function cosmeticsState(): Promise<CosmeticsState> {
-  if (!api()) return { online: false, catalog: [], equipped: NOTHING, customCape: null, error: t('cosmetics.noServer') };
+  if (!api()) return { online: false, local: false, catalog: [], equipped: NOTHING, customCape: null, error: t('cosmetics.noServer') };
   let catalog: Cosmetic[];
   try {
     const list = await fetchJson<CatalogEntry[]>(`${api()}/api/cosmetics`);
@@ -71,11 +92,11 @@ export async function cosmeticsState(): Promise<CosmeticsState> {
       thumbnailUrl: c.thumbnail ? api() + c.thumbnail : null,
     }));
   } catch {
-    return { online: false, catalog: [], equipped: NOTHING, customCape: null, error: t('cosmetics.offline') };
+    return { online: false, local: false, catalog: [], equipped: NOTHING, customCape: null, error: t('cosmetics.offline') };
   }
 
   const account = selectedAccount();
-  if (!account) return { online: true, catalog, equipped: NOTHING, customCape: null, error: t('cosmetics.loginRequired') };
+  if (!account) return { online: true, local: isLocalApi(), catalog, equipped: NOTHING, customCape: null, error: t('cosmetics.loginRequired') };
 
   const players = await fetchJson<Record<string, PlayerEntry>>(`${api()}/api/players?uuids=${account.uuid}`).catch(
     () => ({}) as Record<string, PlayerEntry>,
@@ -94,8 +115,7 @@ export async function cosmeticsState(): Promise<CosmeticsState> {
       custom: true,
     });
   }
-  const error = account.type === 'offline' && !DEV_MODE ? t('cosmetics.microsoftOnly') : null;
-  return { online: true, catalog, equipped: { ...NOTHING, ...slots }, customCape, error };
+  return { online: true, local: isLocalApi(), catalog, equipped: { ...NOTHING, ...slots }, customCape, error: null };
 }
 
 /** 3D-Modell eines Cosmetics (JSON) – über den Hauptprozess, weil die Oberfläche keine fremden Server abfragen darf. */
@@ -144,7 +164,7 @@ function serverMessage(e: HttpError): string {
 }
 
 export async function news(): Promise<NewsItem[]> {
-  if (!api()) return bundledNews();
+  if (!api() || isLocalApi()) return bundledNews();
   return fetchJson<NewsItem[]>(`${api()}/api/news`).catch(() => bundledNews());
 }
 

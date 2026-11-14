@@ -31,8 +31,8 @@ backend/public/
 .DS_Store
 Thumbs.db
 
-# Gebaute Mod (entsteht durch build-mod.bat)
-launcher/client-mods/
+# The built mod (launcher/client-mods/<version>/*.jar) is part of the project,
+# so the launcher and the installer can be built without building the mod first.
 
 # Mod für die alten Versionen 1.8.9 – 1.13.2 (Gradle)
 mod-legacy/.gradle/

@@ -33,13 +33,33 @@ export interface AccountInfo {
   type: 'microsoft' | 'offline';
   name: string;
   uuid: string;
+  /** Username accounts with an own skin: face as data: URL (otherwise null) */
+  avatar: string | null;
+  /** Username accounts: uploaded skin (null = none) */
+  skin: { slim: boolean } | null;
 }
 
 export interface AccountsState {
   accounts: AccountInfo[];
   selectedId: string | null;
-  /** Offline-Accounts sind nur im Entwicklermodus erlaubt. */
+  /** Username accounts (no login) can be created. */
   offlineAllowed: boolean;
+  /** Microsoft sign-in is set up in this launcher (Azure client ID). */
+  microsoftAvailable: boolean;
+}
+
+/** Own skin of a username account, prepared by the launcher window (all images 64×64 PNG). */
+export interface SkinUpload {
+  /** the skin as uploaded */
+  png: Uint8Array;
+  /** version for the classic model (4 px arms) */
+  wide: Uint8Array;
+  /** version for the slim model (3 px arms) */
+  slim: Uint8Array;
+  /** true = the uploaded skin is made for slim arms */
+  slimModel: boolean;
+  /** face as data: URL */
+  avatar: string;
 }
 
 export interface Progress {
@@ -115,6 +135,8 @@ export type Equipment = Record<CosmeticSlot, string | null>;
 
 export interface CosmeticsState {
   online: boolean;
+  /** true = built-in server: cosmetics are saved on this PC only */
+  local: boolean;
   catalog: Cosmetic[];
   equipped: Equipment;
   /** ID des eigenen hochgeladenen Capes (steht dann auch im Katalog) */
@@ -172,6 +194,9 @@ export interface MoonApi {
   selectAccount(id: string): Promise<AccountsState>;
   removeAccount(id: string): Promise<AccountsState>;
   skin(): Promise<SkinInfo>;
+  /** Own skin for the selected username account */
+  setSkin(upload: SkinUpload): Promise<AccountsState>;
+  removeSkin(): Promise<AccountsState>;
 
   play(version: string, server?: string): Promise<void>;
   servers(): Promise<ServerInfo[]>;

@@ -10,6 +10,8 @@
   // Modelle, Texturen und Vorschaubilder nach public/ kopieren (werden direkt als Dateien ausgeliefert)
   "build": { "command": "node tools/build-assets.mjs", "watch_dir": ["cosmetics.json", "news.json"] },
   "assets": { "directory": "public" },
+  // "1" = username accounts (no Microsoft login) may use cosmetics too, "0" = only real Minecraft accounts
+  "vars": { "MOONVIBE_OFFLINE": "1" },
   // Wer trägt was + Anmelde-Sitzungen
   "d1_databases": [{ "binding": "DB", "database_name": "moonvibe", "database_id": "local", "migrations_dir": "migrations" }],
   // Eigene Capes der Spieler (Schlüssel = Prüfsumme)

@@ -40,6 +40,16 @@
       {
         "from": "client-mods",
         "to": "client-mods"
+      },
+      {
+        "from": "../backend",
+        "to": "cosmetics",
+        "filter": [
+          "cosmetics.json",
+          "models/**/*",
+          "textures/**/*",
+          "thumbnails/**/*"
+        ]
       }
     ],
     "icon": "assets/icon.ico",

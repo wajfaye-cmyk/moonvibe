@@ -1,12 +1,12 @@
 // Speichert Einstellungen und Accounts als JSON im moonvibe-Ordner.
 import { app, safeStorage } from 'electron';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import { join } from 'node:path';
 import { isLang } from '../shared/i18n';
 import type { Settings } from '../shared/types';
-import { API_URL, LOCAL_API_URL } from './constants';
+import { API_URL } from './constants';
 
 export const DATA_DIR = join(app.getPath('appData'), '.moonvibe');
 mkdirSync(DATA_DIR, { recursive: true });
@@ -14,7 +14,16 @@ mkdirSync(DATA_DIR, { recursive: true });
 /** Ordner mit den mitgelieferten moonvibe-Mods (ein Unterordner pro Minecraft-Version). */
 export const CLIENT_MODS_DIR = app.isPackaged ? join(process.resourcesPath, 'client-mods') : join(app.getAppPath(), 'client-mods');
 
-/** Offline-Accounts nur beim Entwickeln – im fertigen Launcher braucht man einen echten Minecraft-Account. */
+/** Cosmetics catalog, models, textures and thumbnails for the built-in cosmetics server. */
+export const COSMETICS_ASSETS_DIR = app.isPackaged ? join(process.resourcesPath, 'cosmetics') : join(app.getAppPath(), '..', 'backend');
+
+/** Data of the built-in cosmetics server (who wears what, uploaded capes). */
+export const LOCAL_COSMETICS_DIR = join(DATA_DIR, 'cosmetics');
+
+/** Uploaded skins of username accounts (<uuid>.png = original, .wide.png / .slim.png = per arm model). */
+export const SKINS_DIR = join(DATA_DIR, 'skins');
+
+/** Developer mode (started from source): enables the automatic UI test. */
 export const DEV_MODE = !app.isPackaged;
 
 function readJson<T>(file: string, fallback: T): T {
@@ -43,8 +52,15 @@ const DEFAULT_SETTINGS: Settings = {
   gameHeight: null,
 };
 
-/** Standard-Cosmetics-Server: beim Entwickeln der Testserver auf dem PC, sonst API_URL (leer = keiner). */
-export const DEFAULT_API_URL = DEV_MODE ? LOCAL_API_URL : API_URL;
+/** Shared cosmetics server built into this launcher ('' = none, then the built-in server on this PC is used). */
+export const DEFAULT_API_URL = API_URL;
+
+/** Address of the built-in cosmetics server ('' until it has started, or if it could not start). */
+let localApiUrl = '';
+
+export function setLocalApiUrl(url: string): void {
+  localApiUrl = url;
+}
 
 let settings: Settings = readJson('launcher.json', DEFAULT_SETTINGS);
 if (!isLang(settings.language)) settings.language = 'en';
@@ -55,9 +71,19 @@ export function getSettings(): Settings {
   return settings;
 }
 
-/** Adresse des Cosmetics-Servers: selbst eingetragen oder Standard ('' = keiner eingerichtet). */
-export function apiUrl(): string {
+/** Address of a shared cosmetics server: entered in the settings or built in ('' = none). */
+function remoteApiUrl(): string {
   return (settings.apiUrl.trim() || DEFAULT_API_URL).replace(/\/+$/, '');
+}
+
+/** Cosmetics server in use: the shared one if set up, otherwise the built-in one on this PC. */
+export function apiUrl(): string {
+  return remoteApiUrl() || localApiUrl;
+}
+
+/** true = cosmetics are stored on this PC only (built-in server). */
+export function isLocalApi(): boolean {
+  return !remoteApiUrl() && Boolean(localApiUrl);
 }
 
 export function saveSettings(patch: Partial<Settings>): Settings {
@@ -78,6 +104,10 @@ export interface StoredAccount {
   mcAccessToken?: string;
   mcExpiresAt?: number;
   xuid?: string;
+  /** Username accounts: an own skin was uploaded (files in SKINS_DIR); slim = 3 px arms */
+  skin?: { slim: boolean };
+  /** Username accounts: face of the uploaded skin as data: URL (for the account picture) */
+  avatar?: string;
 }
 
 interface AccountsFile {
@@ -85,6 +115,8 @@ interface AccountsFile {
   selectedId: string | null;
   /** Zufällige Kennung dieser Installation (Minecraft möchte eine "clientId"). */
   clientId: string;
+  /** Secret of this installation: reserves the usernames of its username accounts on a shared cosmetics server. */
+  offlineKey?: string;
 }
 
 let accountsFile: AccountsFile = readJson<AccountsFile>('accounts.json', { accounts: [], selectedId: null, clientId: '' });
@@ -95,6 +127,14 @@ if (!accountsFile.clientId) {
 
 export function getAccountsFile(): AccountsFile {
   return accountsFile;
+}
+
+export function offlineKey(): string {
+  if (!accountsFile.offlineKey) {
+    accountsFile.offlineKey = randomBytes(32).toString('hex');
+    writeJson('accounts.json', accountsFile);
+  }
+  return accountsFile.offlineKey;
 }
 
 export function saveAccountsFile(update: (file: AccountsFile) => void): AccountsFile {

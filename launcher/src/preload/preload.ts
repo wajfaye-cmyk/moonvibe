@@ -17,6 +17,8 @@ const api: MoonApi = {
   selectAccount: (id) => invoke('accounts:select', id),
   removeAccount: (id) => invoke('accounts:remove', id),
   skin: () => invoke('skin'),
+  setSkin: (upload) => invoke('skin:set', upload),
+  removeSkin: () => invoke('skin:remove'),
 
   play: (version, server) => invoke('play', version, server),
   servers: () => invoke('servers'),

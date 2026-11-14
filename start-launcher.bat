@@ -9,8 +9,9 @@ if errorlevel 1 (
   exit /b 1
 )
 
-if not exist "launcher\client-mods" (
-  echo The moonvibe mod has not been built yet - building it now ...
+rem The client mod for all versions is already in launcher\client-mods (rebuild it with build-mod.bat).
+if not exist "launcher\client-mods\1.8.9" (
+  echo The moonvibe mod is missing - building it now ...
   call "%~dp0build-mod.bat" nopause
   if errorlevel 1 exit /b 1
 )

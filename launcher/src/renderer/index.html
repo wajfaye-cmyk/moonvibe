@@ -139,7 +139,7 @@
             <div class="wardrobe-head">
               <div>
                 <h2 data-i18n="cosmetics.title"></h2>
-                <p class="muted subtitle" data-i18n="cosmetics.subtitle"></p>
+                <p class="muted subtitle" id="cosmetics-subtitle" data-i18n="cosmetics.subtitle"></p>
               </div>
               <div class="search small">
                 <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
@@ -252,16 +252,31 @@
           </button>
         </div>
         <div class="account-list" id="account-list"></div>
-        <button type="button" class="ms-button" id="ms-login">
-          <span class="ms-logo"><i></i><i></i><i></i><i></i></span><span data-i18n="account.microsoft"></span>
-        </button>
         <form class="offline-form" id="offline-form" hidden>
           <p class="muted" data-i18n="account.offlineHint"></p>
           <div class="offline-row">
-            <input type="text" id="offline-name" data-i18n-placeholder="account.namePlaceholder" maxlength="16" />
+            <input type="text" id="offline-name" data-i18n-placeholder="account.namePlaceholder" maxlength="16" spellcheck="false" autocomplete="off" />
             <button type="submit" class="secondary" data-i18n="account.add"></button>
           </div>
         </form>
+        <div class="skin-box" id="skin-box" hidden>
+          <img id="skin-face" class="skin-face" alt="" />
+          <div class="skin-info">
+            <span class="field-label" data-i18n="skin.title"></span>
+            <p class="muted" data-i18n="skin.hint"></p>
+            <div class="skin-actions">
+              <button type="button" class="secondary" id="skin-upload" data-i18n="skin.upload"></button>
+              <div class="seg" id="skin-model" hidden>
+                <button type="button" data-value="classic" data-i18n="skin.classic"></button>
+                <button type="button" data-value="slim" data-i18n="skin.slim"></button>
+              </div>
+              <button type="button" class="secondary" id="skin-remove" data-i18n="skin.remove" hidden></button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="ms-button" id="ms-login" hidden>
+          <span class="ms-logo"><i></i><i></i><i></i><i></i></span><span data-i18n="account.microsoft"></span>
+        </button>
         <p class="error" id="account-error" hidden></p>
       </div>
     </div>

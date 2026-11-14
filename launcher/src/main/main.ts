@@ -4,7 +4,8 @@ import { readFile, stat } from 'node:fs/promises';
 import os from 'node:os';
 import { join } from 'node:path';
 import { LocalizedError, translate } from '../shared/i18n';
-import type { CosmeticSlot, ProjectType, SearchParams, Settings } from '../shared/types';
+import type { CosmeticSlot, ProjectType, SearchParams, Settings, SkinUpload } from '../shared/types';
+import { startLocalCosmetics } from '../core/localserver';
 import { LAUNCHER_VERSION } from '../core/http';
 import { instanceDir, openInstance } from '../core/instances';
 import { search, shadersSupported } from '../core/modrinth';
@@ -14,8 +15,8 @@ import { runDevTest } from './devtest';
 import { gameState, getVersions, killGame, play, versionInfo } from './game';
 import { panoramaImages } from './panorama';
 import { serverList } from './servers';
-import { currentSkin } from './skin';
-import { DATA_DIR, DEFAULT_API_URL, DEV_MODE, getSettings, saveSettings } from './store';
+import { currentSkin, removeSkin, setSkin } from './skin';
+import { COSMETICS_ASSETS_DIR, DATA_DIR, DEFAULT_API_URL, DEV_MODE, getSettings, LOCAL_COSMETICS_DIR, saveSettings, setLocalApiUrl } from './store';
 
 let win: BrowserWindow | null = null;
 
@@ -104,6 +105,8 @@ function registerIpc(): void {
   handle('accounts:select', (id: string) => selectAccount(id));
   handle('accounts:remove', (id: string) => removeAccount(id));
   handle('skin', () => currentSkin());
+  handle('skin:set', (upload: SkinUpload) => setSkin(upload));
+  handle('skin:remove', () => removeSkin());
 
   handle('play', (version: string, server?: string) => {
     saveSettings({ lastVersion: version });
@@ -160,7 +163,13 @@ if (!app.requestSingleInstanceLock()) {
       win.focus();
     }
   });
-  void app.whenReady().then(() => {
+  void app.whenReady().then(async () => {
+    // Built-in cosmetics server (used when no shared server is set up) – the launcher also works without it.
+    try {
+      setLocalApiUrl((await startLocalCosmetics(COSMETICS_ASSETS_DIR, LOCAL_COSMETICS_DIR)).url);
+    } catch (e) {
+      console.error('[moonvibe] Built-in cosmetics server could not start:', e);
+    }
     registerIpc();
     createWindow();
   });

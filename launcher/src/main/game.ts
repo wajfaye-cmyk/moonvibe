@@ -9,7 +9,9 @@ import { moonvibeJava, moonvibeVersions, instanceDir, openInstance, writeDefault
 import { launchGame } from '../core/launch';
 import { listGameVersions } from '../core/versions';
 import { launchAccount, selectedAccount } from './accounts';
-import { cosmeticsSession } from './cosmetics';
+import { applySkinPack } from '../core/skinpack';
+import { cosmeticsSession, needsCosmeticsSession } from './cosmetics';
+import { skinFilesFor } from './skin';
 import { apiUrl, CLIENT_MODS_DIR, DATA_DIR, getAccountsFile, getSettings } from './store';
 
 let versionsCache: GameVersion[] | null = null;
@@ -68,7 +70,11 @@ export async function play(version: string, win: BrowserWindow, server: string |
     // Damit man auch im Spiel Cosmetics anziehen kann – ohne dass die Mod den Minecraft-Token weitergeben muss.
     // Ist der Cosmetics-Server gerade nicht erreichbar, startet das Spiel trotzdem.
     const selected = selectedAccount();
-    const cosmetics = selected?.type === 'microsoft' && apiUrl() ? await cosmeticsSession(selected).catch(() => null) : null;
+    const cosmetics = selected && needsCosmeticsSession() ? await cosmeticsSession(selected).catch(() => null) : null;
+    // Own skin of a username account: shown in game through a small resource pack (removed again without a skin).
+    await applySkinPack(instanceDir(DATA_DIR, version), info.releaseTime, skinFilesFor(selected)).catch((e: Error) =>
+      log(`[moonvibe] Could not apply the skin: ${e.message}`),
+    );
     lastLines.length = 0;
     child = await launchGame({
       install,

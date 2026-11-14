@@ -1,4 +1,4 @@
-// Account-Verwaltung: Microsoft-Login im eigenen Fenster, Token-Erneuerung, Offline-Accounts (nur Dev).
+// Account-Verwaltung: Username-Accounts (kein Login nötig), Microsoft-Login im eigenen Fenster, Token-Erneuerung.
 import { BrowserWindow, session } from 'electron';
 import { randomUUID } from 'node:crypto';
 import { LocalizedError, translate } from '../shared/i18n';
@@ -15,14 +15,24 @@ import {
   type MinecraftSession,
 } from '../core/microsoft';
 import { MS_CLIENT_ID } from './constants';
-import { DEV_MODE, getAccountsFile, getSettings, protect, saveAccountsFile, unprotect, type StoredAccount } from './store';
+import { rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { getAccountsFile, getSettings, protect, saveAccountsFile, SKINS_DIR, unprotect, type StoredAccount } from './store';
 
 export function accountsState(): AccountsState {
   const file = getAccountsFile();
   return {
-    accounts: file.accounts.map(({ id, type, name, uuid }) => ({ id, type, name, uuid })),
+    accounts: file.accounts.map(({ id, type, name, uuid, skin, avatar }) => ({
+      id,
+      type,
+      name,
+      uuid,
+      avatar: type === 'offline' && skin ? (avatar ?? null) : null,
+      skin: type === 'offline' ? (skin ?? null) : null,
+    })),
     selectedId: file.selectedId,
-    offlineAllowed: DEV_MODE,
+    offlineAllowed: true,
+    microsoftAvailable: Boolean(MS_CLIENT_ID),
   };
 }
 
@@ -96,10 +106,15 @@ export async function loginMicrosoft(parent: BrowserWindow): Promise<AccountsSta
   return accountsState();
 }
 
+/** Username account: just a name, no login (like TLauncher). The same name always gets the same UUID. */
 export function addOffline(name: string): AccountsState {
-  if (!DEV_MODE) throw new LocalizedError('error.offlineDevOnly');
   if (!/^[A-Za-z0-9_]{3,16}$/.test(name)) throw new LocalizedError('error.invalidName');
   saveAccountsFile((file) => {
+    const existing = file.accounts.find((a) => a.type === 'offline' && a.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      file.selectedId = existing.id;
+      return;
+    }
     const id = randomUUID();
     file.accounts.push({ id, type: 'offline', name, uuid: offlineUuid(name) });
     file.selectedId = id;
@@ -115,6 +130,10 @@ export function selectAccount(id: string): AccountsState {
 }
 
 export function removeAccount(id: string): AccountsState {
+  const removed = getAccountsFile().accounts.find((a) => a.id === id);
+  if (removed?.type === 'offline' && /^[0-9a-f]{32}$/.test(removed.uuid)) {
+    for (const suffix of ['', '.wide', '.slim']) rmSync(join(SKINS_DIR, `${removed.uuid}${suffix}.png`), { force: true });
+  }
   saveAccountsFile((file) => {
     file.accounts = file.accounts.filter((a) => a.id !== id);
     if (file.selectedId === id) file.selectedId = file.accounts[0]?.id ?? null;
@@ -144,7 +163,6 @@ export async function launchAccount(): Promise<LaunchAccount> {
   const account = selectedAccount();
   if (!account) throw new LocalizedError('error.notLoggedIn');
   if (account.type === 'offline') {
-    if (!DEV_MODE) throw new LocalizedError('error.offlineDevOnly');
     return { name: account.name, uuid: account.uuid, accessToken: '0', xuid: '0', userType: 'legacy' };
   }
   const accessToken = await validMinecraftToken(account);

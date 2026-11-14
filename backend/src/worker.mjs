@@ -127,6 +127,64 @@ async function createSession(env, name, serverId) {
   return { token, uuid: profile.id, expiresAt };
 }
 
+// ---------- Username accounts (no Microsoft login) ----------
+// Players who only enter a name (like in TLauncher) cannot be confirmed by Mojang. Instead, the first launcher
+// that uses a name reserves it with a secret of its installation; later sign-ins with that name need the same
+// secret. Their UUID is the one Minecraft itself gives offline players, so it never collides with real accounts.
+// Switch this off with the variable MOONVIBE_OFFLINE = "0" (wrangler.jsonc → vars).
+
+/** MD5 (only needed for Minecraft's offline UUIDs; written out here so it runs everywhere). */
+function md5(text) {
+  const input = new TextEncoder().encode(text);
+  const length = (((input.length + 8) >> 6) + 1) << 6;
+  const data = new Uint8Array(length);
+  data.set(input);
+  data[input.length] = 0x80;
+  const view = new DataView(data.buffer);
+  view.setUint32(length - 8, input.length << 3, true);
+  view.setUint32(length - 4, input.length >>> 29, true);
+  const S = [7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21];
+  const K = Array.from({ length: 64 }, (_, i) => Math.floor(Math.abs(Math.sin(i + 1)) * 2 ** 32) >>> 0);
+  let [a0, b0, c0, d0] = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476];
+  for (let offset = 0; offset < length; offset += 64) {
+    let [a, b, c, d] = [a0, b0, c0, d0];
+    for (let i = 0; i < 64; i++) {
+      const round = i >> 4;
+      const f = round === 0 ? (b & c) | (~b & d) : round === 1 ? (d & b) | (~d & c) : round === 2 ? b ^ c ^ d : c ^ (b | ~d);
+      const g = round === 0 ? i : round === 1 ? (5 * i + 1) % 16 : round === 2 ? (3 * i + 5) % 16 : (7 * i) % 16;
+      const sum = (a + f + K[i] + view.getUint32(offset + g * 4, true)) >>> 0;
+      const shift = S[round * 4 + (i % 4)];
+      [a, d, c, b] = [d, c, b, (b + ((sum << shift) | (sum >>> (32 - shift)))) >>> 0];
+    }
+    [a0, b0, c0, d0] = [(a0 + a) >>> 0, (b0 + b) >>> 0, (c0 + c) >>> 0, (d0 + d) >>> 0];
+  }
+  const out = new Uint8Array(16);
+  [a0, b0, c0, d0].forEach((word, i) => new DataView(out.buffer).setUint32(i * 4, word, true));
+  return out;
+}
+
+/** UUID of an offline player, exactly like Minecraft computes it (without dashes). */
+function offlineUuid(name) {
+  const hash = md5(`OfflinePlayer:${name}`);
+  hash[6] = (hash[6] & 0x0f) | 0x30;
+  hash[8] = (hash[8] & 0x3f) | 0x80;
+  return hex(hash);
+}
+
+/** Session for a username account: { token, uuid, expiresAt }, or 'taken' if another installation owns the name. */
+async function createOfflineSession(env, name, key) {
+  if (!/^[A-Za-z0-9_]{3,16}$/.test(name) || !/^[0-9a-f]{64}$/.test(key)) return null;
+  const uuid = offlineUuid(name);
+  const keyHash = await sha256(`${uuid}:${key}`);
+  await env.DB.prepare('INSERT OR IGNORE INTO offline_accounts (uuid, key_hash, created) VALUES (?, ?, ?)').bind(uuid, keyHash, Date.now()).run();
+  const owner = await env.DB.prepare('SELECT key_hash FROM offline_accounts WHERE uuid = ?').bind(uuid).first();
+  if (owner?.key_hash !== keyHash) return 'taken';
+  const token = randomHex(32);
+  const expiresAt = Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000;
+  await env.DB.prepare('INSERT INTO sessions (hash, uuid, until) VALUES (?, ?, ?)').bind(await sha256(token), uuid, expiresAt).run();
+  return { token, uuid, expiresAt };
+}
+
 async function authenticate(request, env) {
   const auth = request.headers.get('Authorization') ?? '';
   if (auth.startsWith('Bearer ')) {
@@ -176,6 +234,17 @@ async function handle(request, env) {
     const { name, serverId } = await readBody(request);
     const session = await createSession(env, String(name ?? ''), String(serverId ?? ''));
     if (!session) return json(401, { error: 'Mojang could not confirm this account' });
+    return json(200, session);
+  }
+
+  // Sign-in for username accounts (see above)
+  if (method === 'POST' && url.pathname === '/api/auth/offline') {
+    if (env.MOONVIBE_OFFLINE === '0') return json(403, { error: 'Username accounts are switched off on this server' });
+    if (await limited(env.LIMIT_AUTH, ip)) return json(429, { error: 'Too many requests' });
+    const { name, key } = await readBody(request);
+    const session = await createOfflineSession(env, String(name ?? ''), String(key ?? ''));
+    if (!session) return json(400, { error: 'Invalid name' });
+    if (session === 'taken') return json(409, { error: 'This username is already used by another player' });
     return json(200, session);
   }
 

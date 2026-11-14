@@ -1702,6 +1702,61 @@ input[type='range'] {
   flex: 1;
 }
 
+/* Own skin of a username account */
+.skin-box[hidden],
+.skin-actions [hidden],
+.ms-button[hidden] {
+  display: none;
+}
+
+.skin-box {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.skin-face {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  image-rendering: pixelated;
+  background: rgba(5, 8, 15, 0.5);
+  border: 1px solid var(--border);
+}
+
+.skin-face[src=''] {
+  visibility: hidden;
+}
+
+.skin-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.skin-info p {
+  margin: 4px 0 10px;
+  font-size: 13px;
+}
+
+.skin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.skin-actions .seg button {
+  padding: 6px 12px;
+}
+
+.account-row .avatar {
+  image-rendering: pixelated;
+}
+
 /* ---------- Hinweis unten ---------- */
 .toast {
   position: fixed;

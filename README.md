@@ -15,16 +15,31 @@
 
 ## How to use Moonvibe
 
-Moonvibe is **self-hosted**: there is no central Moonvibe server, no account and no official download.
-You build it yourself and decide who uses it, for example you and your friends.
+**Everything is in one package.** The installer contains the launcher, the client mod for all 17 Minecraft versions
+(`launcher/client-mods/`), all 108 cosmetics and a built-in cosmetics server. A player installs it, types a
+**username**, optionally uploads a **skin**, and plays. No login, no server and no setup are needed.
 
 | What you want | What to do | Time |
 |---|---|---|
-| **Just try it** (singleplayer, test accounts) | [Quick start](#quick-start-test-on-your-pc) | ~10 min |
-| **Your own Moonvibe** with real Minecraft accounts and cosmetics your friends can see | [Tutorial 1](#tutorial-1-set-up-microsoft-login) (Microsoft app), [Tutorial 2](#tutorial-2-run-your-own-cosmetics-server-cloudflare-free) (cosmetics server), [Tutorial 3](#tutorial-3-build-the-installer) (installer) | ~1 h plus waiting for Mojang |
+| **Try it from source** | [Quick start](#quick-start-test-on-your-pc) | ~5 min |
+| **An installer for your players** | [Tutorial 3](#tutorial-3-build-the-installer) (`build-installer.bat` or GitHub Actions) | ~10 min |
+| **Cosmetics that other players can see** | [Tutorial 2](#tutorial-2-run-your-own-cosmetics-server-cloudflare-free) (shared cosmetics server) | ~20 min |
+| **Sign-in with real Minecraft accounts** (optional) | [Tutorial 1](#tutorial-1-set-up-microsoft-login) (Microsoft app) | ~1 h plus waiting for Mojang |
 
-Cosmetics are shared between everyone who uses the **same** cosmetics server. Without a server, the launcher and the
-client mod work normally, just without cosmetics.
+### Accounts, skins and cosmetics
+
+- **Username accounts:** the account window asks for a player name (3–16 characters: letters, numbers, `_`). That is
+  all a player needs. Username accounts work in singleplayer and on servers that allow them (`online-mode=false`);
+  servers that check for a paid Minecraft account need a Microsoft account (Tutorial 1).
+- **Skins:** in the account window, **Upload skin** takes a 64×64 PNG (the old 64×32 format works too) and offers
+  Classic and Slim arms. The skin is shown in the launcher and in game. In game it works through a small resource pack
+  that the launcher writes into the game folder (`resourcepacks/moonvibe-skin.zip`), so it needs no mod update. The
+  limit of this approach: only you see your skin, and other players without a skin of their own look like you on your
+  screen.
+- **Cosmetics:** without a shared server, the launcher uses its **built-in cosmetics server** (it runs inside the
+  launcher on `127.0.0.1` and saves to the Moonvibe folder). Everything works in the launcher and in game, but only on
+  that PC. With a shared server (Tutorial 2), all players who use it see each other's cosmetics; username accounts can
+  use it too (the first launcher that uses a name reserves it on that server).
 
 **Requirements:** Windows 10 or 11 · [Node.js](https://nodejs.org) 22 or newer (LTS) · internet access.
 Java and Minecraft are downloaded automatically.
@@ -53,7 +68,7 @@ Java and Minecraft are downloaded automatically.
 
 | Part | Folder | What it does |
 |---|---|---|
-| **Launcher** | `launcher/` | Installs Minecraft, Java and Fabric automatically · server list with live player counts and one-click join · mods, resource packs and shaders from Modrinth (categories, sorting, Iris check) · 108 cosmetics (capes, hats, headphones, glasses, backpacks, wings, sneakers, pets) with a 3D preview · upload your own cape (with editor) · news · Microsoft login · works offline after the first start · 6 languages |
+| **Launcher** | `launcher/` | Installs Minecraft, Java and Fabric automatically · server list with live player counts and one-click join · mods, resource packs and shaders from Modrinth (categories, sorting, Iris check) · 108 cosmetics (capes, hats, headphones, glasses, backpacks, wings, sneakers, pets) with a 3D preview · upload your own cape (with editor) · news · username accounts with skin upload (no login) · optional Microsoft login · built-in cosmetics server · works offline after the first start · 6 languages |
 | **Client mod** | `mod/` (1.14.4 – 26.3) and `mod-legacy/` (1.8.9 – 1.13.2) | Custom main menu and loading screen · Moonvibe menu (**Right Shift**) with HUD editor, mod cards and cosmetics wardrobe · 20 modules · zoom (**C**) · Discord status |
 | **Cosmetics server** | `backend/` | Stores who wears what, accepts custom capes and serves 3D models, textures, thumbnails and news. You run your own, for free on Cloudflare. |
 | **Branding** | `branding/` | Original logos plus a script that renders every size |
@@ -96,10 +111,10 @@ The launcher only lists versions where **everything** works (HUD, menus, zoom, c
 
 Download this repository (**Code → Download ZIP**, then unpack it) or clone it. You need [Node.js](https://nodejs.org) (LTS).
 
-1. Double-click **`start-backend.bat`**. This starts a test cosmetics server on your PC. Keep the window open.
-2. Double-click **`start-launcher.bat`**. The first start builds the mod and installs everything, which takes a few minutes.
-3. Click **Sign in** (top right) and create an **offline account**. Offline accounts only exist in this test mode.
-4. Pick a version and press **LAUNCH**.
+1. Double-click **`start-launcher.bat`**. The first start installs the launcher's dependencies. The client mod is
+   already included, so nothing has to be built.
+2. Type a **username** in the account window (it opens by itself on the first start) and, if you like, upload a skin.
+3. Pick a version and press **LAUNCH**.
 
 In game:
 - **Right Shift** opens the Moonvibe menu: drag modules with the mouse, right-click a module for its settings,
@@ -107,12 +122,15 @@ In game:
 - Hold **C** to zoom. The mouse wheel changes the zoom level.
 - Change keys under Options → Controls → category "moonvibe".
 
-> The finished launcher (installer) only accepts real Microsoft accounts. For that, follow
-> [Tutorial 1](#tutorial-1-set-up-microsoft-login).
+> The **Sign in with Microsoft** button only appears once a client ID is set up
+> ([Tutorial 1](#tutorial-1-set-up-microsoft-login)). Username accounts always work.
 
 ---
 
 ## Tutorial 1: Set up Microsoft login
+
+This tutorial is **optional**: username accounts work without it. Do it if your players should also be able to sign in
+with a real Minecraft account (needed for servers that check accounts).
 
 Every launcher (Lunar, Badlion, Prism …) has its own app registered with Microsoft. Without one, nobody can sign in
 with a real Minecraft account in the finished launcher. The code is ready; it only needs an **Application (client) ID**.
@@ -193,9 +211,12 @@ also receives. Sessions are only stored as a SHA-256 hash.
 
 ## Tutorial 2: Run your own cosmetics server (Cloudflare, free)
 
-The cosmetics server stores who wears what. Everyone who wants cosmetics runs their own: `backend/` runs as a
-**Cloudflare Worker**, free, with HTTPS, without your own server or domain. A Cloudflare account only needs an
-email address. Players see each other's cosmetics when they use the same server.
+This tutorial is **optional**: cosmetics already work on each player's own PC through the built-in server. Do it so
+that players **see each other's** cosmetics.
+
+The shared cosmetics server stores who wears what. `backend/` runs as a **Cloudflare Worker**, free, with HTTPS,
+without your own server or domain. A Cloudflare account only needs an email address. Players see each other's
+cosmetics when they use the same server.
 
 ### One-time setup
 
@@ -227,33 +248,37 @@ After changing cosmetics, `backend/news.json` or the server code, run `npm run d
 
 ### Good to know
 
-- The online server has **no test mode**: only real Microsoft accounts can change cosmetics.
+- **Username accounts** can use the online server: the first launcher that signs in with a name reserves it with a
+  secret of that installation, and nobody else can change that player's cosmetics afterwards. To allow only real
+  Microsoft accounts, set `"MOONVIBE_OFFLINE": "0"` under `vars` in `backend/wrangler.jsonc` and deploy again.
+- After updating from an older version of this project, run `npm run deploy` once: it adds the table for username
+  accounts (`backend/migrations/0003_offline_accounts.sql`).
 - The free plan allows 100,000 requests per day. Models, textures and thumbnails don't count. That is plenty to start
   with (roughly a few hundred players per day). Above that, Workers Paid costs $5 per month.
 - Data: who wears what and the sessions are stored in a Cloudflare D1 database (`backend/migrations/`); custom capes are
   stored in Cloudflare KV.
 - Test locally: `start-backend.bat` (or `npm run dev` in `backend`) starts the same server at `http://127.0.0.1:8777`,
-  with test mode enabled.
+  with test mode enabled. Enter that address in the launcher under Settings → Cosmetics server to use it.
 
 ---
 
 ## Tutorial 3: Build the installer
 
-1. Fill in `MS_CLIENT_ID` (tutorial 1) and, if you like, `API_URL` (tutorial 2) in `launcher/src/main/constants.ts`.
-2. Build the mod for all 17 versions: double-click **`build-mod.bat`**. It downloads its own JDK into `.tools/`.
-3. Build the installer:
-   ```
-   cd launcher
-   npm install
-   npm run dist
-   ```
-   The installer is created in `launcher/release/` (for example `Moonvibe-Setup-0.2.0.exe`).
-4. Give the `.exe` to your players. If your copy of the project is on GitHub, you can publish it there:
+1. Optional: fill in `API_URL` (tutorial 2) and `MS_CLIENT_ID` (tutorial 1) in `launcher/src/main/constants.ts`.
+   Without them, players use username accounts and the built-in cosmetics server.
+2. Double-click **`build-installer.bat`** (on Windows, needs [Node.js](https://nodejs.org)). It runs `npm install` and
+   `npm run dist` in the `launcher` folder. The installer is created in `launcher/release/`
+   (for example `Moonvibe-Setup-0.2.0.exe`) and contains the client mod for all versions and all cosmetics.
+3. Give the `.exe` to your players. If your copy of the project is on GitHub, you can publish it there:
    **Releases → Draft a new release**, create a tag (for example `v0.2.0`), attach the `.exe` and click
    **Publish release**.
 
-**No local setup?** Push the project to GitHub and open **Actions → Build Moonvibe → Run workflow**. It builds the mod
-for all versions and the Windows installer, and attaches `Moonvibe-Setup-*.exe` to the run (Artifacts).
+**No local setup?** Push the project to GitHub and open **Actions → Build Moonvibe → Run workflow**. It builds the
+Windows installer in a few minutes and attaches `Moonvibe-Setup-*.exe` to the run (Artifacts).
+
+**Changed the mod?** The built mod jars are part of the project (`launcher/client-mods/<version>/`). After changing
+`mod/` or `mod-legacy/`, rebuild them with **`build-mod.bat`**, or tick **Rebuild the mod** when starting the GitHub
+workflow, and put the new jars into `launcher/client-mods/`.
 
 > Windows SmartScreen warns about unsigned programs ("Windows protected your PC" → "More info" → "Run anyway").
 > A code-signing certificate removes that warning.

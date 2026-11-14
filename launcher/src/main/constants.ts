@@ -6,10 +6,9 @@
 export const MS_CLIENT_ID = process.env.MOONVIBE_MS_CLIENT_ID ?? '';
 
 /**
- * Standard-Cosmetics-Server des fertigen Launchers (eigener Cloudflare Worker, README → Tutorial 2).
- * Leer = keiner; Spieler können ihn auch in den Einstellungen eintragen.
+ * Shared cosmetics server of the finished launcher (your own Cloudflare Worker, README → Tutorial 2).
+ * Empty = none: the launcher then uses its built-in cosmetics server on this PC, so cosmetics work
+ * right after installing (other players only see them once a shared server is entered here).
+ * Players can also enter a server address in the settings.
  */
 export const API_URL = '';
-
-/** Cosmetics-Server auf dem eigenen PC (start-backend.bat) – nimmt der Launcher beim Entwickeln. */
-export const LOCAL_API_URL = 'http://127.0.0.1:8777';

@@ -21,6 +21,7 @@ import { Dropdown, type DropdownOption } from './dropdown.js';
 import { LogParser } from './log.js';
 import type { ModelJson } from './mcmodel.js';
 import { BACK_SLOTS, PlayerPreview, renderThumbnail, SLOTS } from './preview3d.js';
+import { isSkinImage, prepareSkin } from './skinart.js';
 
 declare global {
   interface Window {
@@ -461,7 +462,7 @@ function renderAccounts(): void {
   if (!accounts) return;
   const current = currentAccount();
   $('account-name').textContent = current ? current.name : t('account.login');
-  $<HTMLImageElement>('account-avatar').src = current ? avatarUrl(current.uuid) : '';
+  $<HTMLImageElement>('account-avatar').src = current ? (current.avatar ?? avatarUrl(current.uuid)) : '';
   $('welcome-line').textContent = current ? t('home.welcome', { name: '' }).replace(/[,\s]+$/, '') + ',' : t('home.welcomeGuest');
   $('welcome-name').textContent = current ? current.name : '';
   $('nameplate').replaceChildren(h('span', { className: 'dot' }), current ? current.name : 'Moonvibe');
@@ -478,7 +479,7 @@ function renderAccounts(): void {
       const row = h(
         'div',
         { className: `account-row${a.id === accounts.selectedId ? ' selected' : ''}` },
-        h('img', { className: 'avatar', src: avatarUrl(a.uuid), alt: '' }),
+        h('img', { className: 'avatar', src: a.avatar ?? avatarUrl(a.uuid), alt: '' }),
         h('div', { className: 'account-info' }, a.name, h('small', { textContent: t(a.type === 'microsoft' ? 'account.typeMicrosoft' : 'account.typeOffline') })),
         remove,
       );
@@ -491,12 +492,84 @@ function renderAccounts(): void {
     }),
   );
   $('offline-form').hidden = !accounts.offlineAllowed;
+  $('ms-login').hidden = !accounts.microsoftAvailable;
+
+  // own skin: only for username accounts (Microsoft accounts bring their skin along)
+  const offline = current?.type === 'offline' ? current : null;
+  $('skin-box').hidden = !offline;
+  $<HTMLImageElement>('skin-face').src = offline?.avatar ?? '';
+  $('skin-model').hidden = !offline?.skin;
+  $('skin-remove').hidden = !offline?.skin;
+  for (const button of $('skin-model').querySelectorAll('button')) {
+    button.classList.toggle('active', (button.dataset.value === 'slim') === Boolean(offline?.skin?.slim));
+  }
 }
 
 function openAccountModal(): void {
   showError($('account-error'), null);
   $('account-modal').hidden = false;
+  if (!accounts.accounts.length) $<HTMLInputElement>('offline-name').focus();
 }
+
+// ---------- Own skin (username accounts) ----------
+async function loadImage(dataUrl: string): Promise<HTMLImageElement> {
+  const image = new Image();
+  image.src = dataUrl;
+  await image.decode();
+  return image;
+}
+
+/** Saves a skin image for the selected account; slimModel = null detects the arm model. */
+async function saveSkin(dataUrl: string, slimModel: boolean | null): Promise<void> {
+  let image: HTMLImageElement;
+  try {
+    image = await loadImage(dataUrl);
+  } catch {
+    throw new Error(t('skin.invalid'));
+  }
+  if (!isSkinImage(image)) throw new Error(t('skin.invalid'));
+  accounts = await mv.setSkin(await prepareSkin(image, slimModel));
+  renderAccounts();
+  accountChanged();
+}
+
+$('skin-upload').addEventListener('click', async () => {
+  showError($('account-error'), null);
+  try {
+    const dataUrl = await mv.pickImage();
+    if (!dataUrl) return;
+    await saveSkin(dataUrl, null);
+    toast(t('skin.saved'));
+  } catch (e) {
+    showError($('account-error'), e);
+  }
+});
+
+$('skin-model').addEventListener('click', async (e) => {
+  const value = (e.target as HTMLElement).closest('button')?.dataset.value;
+  const current = currentAccount();
+  if (!value || !current?.skin || (value === 'slim') === current.skin.slim) return;
+  showError($('account-error'), null);
+  try {
+    // build both arm versions again from the uploaded image
+    const stored = await mv.skin();
+    if (stored.dataUrl) await saveSkin(stored.dataUrl, value === 'slim');
+  } catch (err) {
+    showError($('account-error'), err);
+  }
+});
+
+$('skin-remove').addEventListener('click', async () => {
+  showError($('account-error'), null);
+  try {
+    accounts = await mv.removeSkin();
+    renderAccounts();
+    accountChanged();
+    toast(t('skin.removed'));
+  } catch (e) {
+    showError($('account-error'), e);
+  }
+});
 
 $('account-chip').addEventListener('click', openAccountModal);
 $('account-close').addEventListener('click', () => ($('account-modal').hidden = true));
@@ -1186,6 +1259,10 @@ $('cosmetic-search').addEventListener('input', () => renderCosmetics());
 
 async function refreshCosmetics(): Promise<void> {
   cosmetics = await mv.cosmetics();
+  // built-in server: say honestly that the cosmetics are saved on this PC
+  const subtitle = $('cosmetics-subtitle');
+  subtitle.dataset.i18n = cosmetics.local ? 'cosmetics.subtitleLocal' : 'cosmetics.subtitle';
+  subtitle.textContent = t(subtitle.dataset.i18n as I18nKey);
   renderCosmetics();
   void syncPreview(homePreview);
   if (preview) void syncPreview(preview);
@@ -1223,7 +1300,7 @@ async function initSettings(): Promise<void> {
 
   const api = $<HTMLInputElement>('api-url');
   api.value = settings.apiUrl;
-  api.placeholder = (await mv.appInfo()).defaultApiUrl || 'https://api.<name>.workers.dev';
+  api.placeholder = (await mv.appInfo()).defaultApiUrl || t('settings.apiBuiltIn');
   api.addEventListener('change', async () => {
     settings = await mv.saveSettings({ apiUrl: api.value.trim() });
     thumbnails.clear();
@@ -1276,6 +1353,8 @@ async function init(): Promise<void> {
   setTimeout(() => {
     $('splash').classList.add('done');
     moveIndicator();
+    // first start: ask for a username right away
+    if (!accounts.accounts.length) openAccountModal();
   }, wait);
 }
 
